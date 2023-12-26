@@ -2,7 +2,7 @@ from model import Connection, Book, User
 from model.tools import hash_password
 
 db = Connection()
-
+#a
 class LibraryController:
 	__instance = None
 
