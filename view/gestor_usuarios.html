@@ -12,7 +12,62 @@
     </div>
 </head>
 <body>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <form class="form-horizontal">
+        <div class="form-group">
+          <label for="Nombre" class="col-sm-3 control-label">Nombre</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre" {% if nombre != "" %}value="{{nombre}}" {% endif %}>
+          </div>
+        </div>
 
+        <div class="form-group">
+          <label for="Email" class="col-sm-3 control-label">Email</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="email" name="email" placeholder="Email" {% if email != "" %}value="{{email}}"{% endif %}>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="Contraseña" class="col-sm-3 control-label">Contraseña</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="contraseña" name="contraseña" placeholder="Contraseña" {% if contraseña != "" %}value="{{contraseña}}"{% endif %}>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="EsAdmin" class="col-sm-3 control-label">¿Es administrador?</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="esadmin" name="esadmin" placeholder="0 NO 1 SI" {% if esadmin != "" %}value="{{esadmin}}"{% endif %}>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-sm-offset-3 col-sm-9">
+              <br>
+            <button type="submit" class="btn btn-primary">Introducir usuario en BD</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="container mt-5">
+    <ul id="lista-usuarios" class="list-group">
+        <li class="list-group-item"><strong> ID - Nombre - Email - Contraseña - EsAdmin </strong></li>
+        {% for usuario in usuarios %}
+        <form action="{{ url_for('eliminar_usuario') }}">
+            <li class="list-group-item">  <input type="hidden" name="id" value="{{ usuario[0] }}">
+                <input type="hidden" name="nombre" value="{{ usuario[1] }}">
+                <input type="hidden" name="email" value="{{ usuario[2] }}">
+                <input type="hidden" name="contraseña" value="{{ usuario[3] }}">
+                <input type="hidden" name="esadmin" value="{{ usuario[4] }}"> {{ usuario[0] }} - {{ usuario[1] }} - {{ usuario[2] }} - {{ usuario[3] }} - {{ usuario[4] }} <button type="submit" class="btn btn-warning">Eliminar usuario</button></li>
+        </form>
+        {% endfor %}
+    </ul>
+</div>
 </body>
 </html>
 {% else %}

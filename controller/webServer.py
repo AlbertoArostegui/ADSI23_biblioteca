@@ -41,12 +41,19 @@ def gestor_libros():
 	autor = request.values.get("autor", "")
 	portada = request.values.get("portada", "")
 	descripcion = request.values.get("descripcion", "")
-	library.add_book(titulo, autor, portada, descripcion)
+	if titulo != "" and autor != "" and portada != "" and descripcion != "":
+		library.add_book(titulo, autor, portada, descripcion)
 	return render_template('gestor_libros.html')
 @app.route('/gestor_usuarios')
 def gestor_usuarios():
-	return render_template('gestor_usuarios.html')
-
+	usuarios = library.get_all_users()
+	nombre = request.values.get("nombre", "")
+	email = request.values.get("email", "")
+	contraseña = request.values.get("contraseña", "")
+	esadmin = request.values.get("esadmin", "")
+	if usuarios != "" and nombre != "" and email != "" and contraseña != "" and esadmin in ["0", "1"]:
+		library.add_usuario(nombre,email,contraseña,esadmin)
+	return render_template('gestor_usuarios.html', usuarios=usuarios)
 
 @app.route('/catalogue')
 def catalogue():
@@ -86,3 +93,8 @@ def logout():
 		request.user.delete_session(request.user.token)
 		request.user = None
 	return resp
+
+@app.route('/eliminar_usuario')
+def eliminar_usuario():
+	library.delete_usuario(request.values.get("id", ""), request.values.get("nombre", ""), request.values.get("email", ""), request.values.get("contraseña",""), request.values.get("esadmin",""))
+	return redirect('/gestor_usuarios')

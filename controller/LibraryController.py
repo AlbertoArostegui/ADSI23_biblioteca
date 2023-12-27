@@ -1,6 +1,7 @@
 from model import Connection, Book, User
 from model.tools import hash_password
 
+
 db = Connection()
 
 class LibraryController:
@@ -36,10 +37,15 @@ class LibraryController:
 		return books, count
 	def add_book(self, titulo, autor, portada, descripcion):
 		try:
-			db.update("""
+			id = db.insert("""
+					INSERT INTO Author (name)
+					VALUES (?)
+				""", (autor,))
+			db.insert("""
 		             INSERT INTO Book (title, author, cover, description)
 		             VALUES ( ?, ?, ?, ?)
-		         """, (titulo, autor, portada, descripcion))
+		        """, (titulo, id[1], portada, descripcion,))
+
 		except Exception as e:
 			print(f"Error añadiendo libros: {e}")
 	def get_user(self, email, password):
@@ -48,10 +54,33 @@ class LibraryController:
 			return User(user[0][0], user[0][1], user[0][2],None, user[0][4])
 		else:
 			return None
-
+	def get_all_users(self):
+		user = db.select("SELECT * from User")
+		if len(user) > 0:
+			return user
+		else:
+			return None
 	def get_user_cookies(self, token, time):
 		user = db.select("SELECT u.* from User u, Session s WHERE u.id = s.user_id AND s.last_login = ? AND s.session_hash = ?", (time, token))
 		if len(user) > 0:
 			return User(user[0][0], user[0][1], user[0][2],None,user[0][4])
 		else:
 			return None
+	def add_usuario(self, nombre, email, contraseña, esadmin):
+		try:
+			hpass = hash_password(contraseña)
+			db.insert("""
+		             INSERT INTO User (name, email, password, admin)
+		             VALUES ( ?, ?, ?, ?)
+		        """, (nombre, email, hpass, esadmin,))
+
+		except Exception as e:
+			print(f"Error añadiendo libros: {e}")
+	def delete_usuario(self, id, nombre, email, contraseña, esadmin):
+		try:
+			db.delete("""
+			          DELETE FROM User
+			          WHERE id = ? AND name = ? AND email = ? AND password = ? AND admin = ?
+			      """, (id, nombre, email, contraseña, esadmin,))
+		except Exception as e:
+			print(f"Error borrando usuario: {e}")
