@@ -1,5 +1,5 @@
 from .LibraryController import LibraryController
-from flask import Flask, render_template, request, make_response, redirect
+from flask import Flask, render_template, request, make_response, redirect, url_for
 
 app = Flask(__name__, static_url_path='', static_folder='../view/static', template_folder='../view/')
 
@@ -30,6 +30,22 @@ def add_cookies(response):
 @app.route('/')
 def index():
 	return render_template('index.html')
+
+
+@app.route('/admin')
+def admin():
+	return render_template('admin.html')
+@app.route('/gestor_libros')
+def gestor_libros():
+	titulo = request.values.get("titulo", "")
+	autor = request.values.get("autor", "")
+	portada = request.values.get("portada", "")
+	descripcion = request.values.get("descripcion", "")
+	library.add_book(titulo, autor, portada, descripcion)
+	return render_template('gestor_libros.html')
+@app.route('/gestor_usuarios')
+def gestor_usuarios():
+	return render_template('gestor_usuarios.html')
 
 
 @app.route('/catalogue')

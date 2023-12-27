@@ -2,7 +2,7 @@ from model import Connection, Book, User
 from model.tools import hash_password
 
 db = Connection()
-#a
+
 class LibraryController:
 	__instance = None
 
@@ -34,17 +34,24 @@ class LibraryController:
 			for b in res
 		]
 		return books, count
-
+	def add_book(self, titulo, autor, portada, descripcion):
+		try:
+			db.update("""
+		             INSERT INTO Book (title, author, cover, description)
+		             VALUES ( ?, ?, ?, ?)
+		         """, (titulo, autor, portada, descripcion))
+		except Exception as e:
+			print(f"Error añadiendo libros: {e}")
 	def get_user(self, email, password):
 		user = db.select("SELECT * from User WHERE email = ? AND password = ?", (email, hash_password(password)))
 		if len(user) > 0:
-			return User(user[0][0], user[0][1], user[0][2])
+			return User(user[0][0], user[0][1], user[0][2],None, user[0][4])
 		else:
 			return None
 
 	def get_user_cookies(self, token, time):
 		user = db.select("SELECT u.* from User u, Session s WHERE u.id = s.user_id AND s.last_login = ? AND s.session_hash = ?", (time, token))
 		if len(user) > 0:
-			return User(user[0][0], user[0][1], user[0][2])
+			return User(user[0][0], user[0][1], user[0][2],None,user[0][4])
 		else:
 			return None

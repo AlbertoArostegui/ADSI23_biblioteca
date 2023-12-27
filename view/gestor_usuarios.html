@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if request.user|default (0)|attr ('admin') == 1 %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+    <div class="text-center">
+    <h2> Bienvenido señor administrador al sistema de gestion de usuarios</h2>
+    </div>
+</head>
+<body>
+
+</body>
+</html>
+{% else %}
+<div class="alert alert-danger text-center" role="alert"><h1><strong>¡ATENCIÓN!</strong> No tienes permiso para acceder a esta página.</h1>
+    <br>
+    <br>
+    <h1>Este incidente sera reportado.</h1>
+</div>
+
+
+{% endif %}
+
+{% endblock %}
