@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if 'user' in request.__dict__ and request.user and request.user.token: %}
+<div class="container p-5 my-5 border">
+    <h1>Tema: {{nomtema}}</h1>
+    <a href="/forum">Volver al foro</a>
+    <br>
+    <br>
+    <table>
+        <tbody>
+    {%for mensaje in mensajes%}
+
+            {% if mensaje[4]!=None: %}
+            <tr class="miniletra" {% if loop.index0 is even %}style="background-color: rgb(167, 215, 255);"{% endif %}>
+            <td >&emsp;Respondiendo a {{mensaje[6]}}:</td>
+            <td>"{{mensaje[5]}}"</td>
+            </tr>
+            {% endif %}
+            <tr {% if loop.index0 is even %}style="background-color: rgb(167, 215, 255);"{% endif %}>
+            <td>{{foreros[loop.index0]}}: </td>
+            <td>{{mensaje[1]}}</td>
+            <td>
+                <form action='/respondermensajeforo' method='post'>
+                    <input type='hidden' name='mensajeid' value="{{mensaje[2]}}">
+                    <input type="hidden" name="nomuser" value="{{foreros[loop.index0]}}">
+                    <input type="hidden" name="cita" value="{{mensaje[1]}}">
+                    <input type="hidden" name="idcita" value="{{mensaje[0]}}">
+                    <input type="hidden" name="idtema" value="{{mensaje[3]}}">
+                    <input type="hidden" name="nomtema" value="{{nomtema}}">
+                    <input type='submit' class="botonforero" value='Responder'>
+                </form>
+            </td>
+            </tr>
+
+    {%endfor%}</tbody></table>
+    <br>
+    <form method="post" action="/nuevomensajeforo">
+        <input type="submit" class="botonforero" value="Nuevo mensaje">
+        <input type="hidden" name="idtema" value="{{idtema}}">
+        <input type="hidden" name="nomtema" value="{{nomtema}}">
+    </form>
+</div>
+{% else %}
+<p class="container p-5 my-5 border">Inicia sesión para usar el foro.</p>
+{% endif %}
+{% endblock %}

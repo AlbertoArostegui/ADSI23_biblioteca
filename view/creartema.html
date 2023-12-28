@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if 'user' in request.__dict__ and request.user and request.user.token: %}
+<div class="container p-5 my-5 border">
+    <h1>Crear nuevo tema</h1>
+    <form action="/creandotema" method="post">
+        <label for="nuevotitulo"><b>Título </b></label>
+        <input name="nuevotitulo" minlength="1" maxlength="31" class="inputforero" type="text" placeholder="Ej: Opinioones sobre Caperuzita Roja">
+        <br>
+        <label for="primermensaje"><b>Primer mensaje </b></label>
+        <input name="primermansaje" minlength="1" maxlength="63" class="inputforero" type="text" placeholder="Ej: Me encanto el desarrollo de la historia, ¿y a vosotros?">
+        <br>
+        <input name="userid" type="hidden" value="{{request.user.id}}">
+        <input type="submit" class="botonforero" value="Crear">
+    </form>
+</div>
+{% else %}
+<p class="container p-5 my-5 border">Inicia sesión para usar el foro.</p>
+{% endif %}
+{% endblock %}

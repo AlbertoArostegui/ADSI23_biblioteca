@@ -70,3 +70,83 @@ def logout():
 		request.user.delete_session(request.user.token)
 		request.user = None
 	return resp
+
+@app.route('/forum')
+def forum():
+	path = request.values.get("path", "/")
+	temas, numtemas = library.listar_temas()
+	#debug print(temas[0][0])
+	return render_template("forum.html", temas=temas, numtemas=numtemas)
+
+@app.route('/creartema')
+def creartema():
+	path = request.values.get("path", "/")
+	return render_template("creartema.html")
+
+@app.route('/creandotema', methods=['POST'])
+def creandotema():
+	if request.method == 'POST':
+		path = request.values.get("path", "/")
+		titulo = request.form["nuevotitulo"]
+		pm = request.form["primermansaje"]
+		userid = request.form["userid"]
+		resultado = library.crear_tema(titulo, pm, userid)
+		if resultado:
+			return render_template("creandotema.html")
+		else:
+			return render_template("errorcreandotema.html")
+	else:
+		return render_template("index.html")
+	
+@app.route('/entrartema', methods=['POST'])
+def entrartema():
+	path = request.values.get("path", "/")
+	nomtema = request.form["nomtema"]
+	idtema = request.form["idtema"]
+	mensajes, foreros = library.listar_mensajes(idtema)
+	nummensajes = len(mensajes)
+	return render_template("entema.html", mensajes=mensajes, nummensajes=nummensajes, foreros=foreros, nomtema=nomtema, idtema=idtema)
+
+@app.route('/nuevomensajeforo' , methods=['POST'])
+def nuevomensajeforo():
+	path = request.values.get("path", "/")
+	idtema = request.form["idtema"]
+	nomtema = request.form["nomtema"]
+	return render_template("nuevomensajeforo.html", idtema=idtema, nomtema=nomtema)
+
+@app.route('/mandandomensajeforo', methods=['POST'])
+def mandandomensajeforo():
+	path = request.values.get("path", "/")
+	idtema = request.form["idtema"]
+	iduser = request.form["iduser"]
+	texto = request.form["nuevomensaje"]
+	nomtema = request.form["nomtema"]
+	resultado = library.anadir_mensaje(idtema,iduser,texto)
+	if resultado:
+		return render_template("mandandomensajeforo.html", idtema=idtema, nomtema=nomtema)
+	else:
+		return render_template("errormensajeforo.html")
+	
+@app.route('/respondermensajeforo' , methods=['POST'])
+def respondermensajeforo():
+	path = request.values.get("path", "/")
+	idtema = request.form["idtema"]
+	nomuser = request.form["nomuser"]
+	cita = request.form["cita"]
+	idcita = request.form["idcita"]
+	nomtema = request.form["nomtema"]
+	return render_template("respondermensajeforo.html", idtema=idtema, nomuser=nomuser, cita=cita, idcita=idcita, nomtema=nomtema)
+
+@app.route('/respondiendomensajeforo' , methods=['POST'])
+def respondiendomensajeforo():
+	path = request.values.get("path", "/")
+	idtema = request.form["idtema"]
+	texto = request.form["nuevomensaje"]
+	iduser = request.form["iduser"]
+	idcita = request.form["idcita"] #id del mensaje al que se responde
+	nomtema = request.form["nomtema"]
+	resultado = library.responder_mensaje(idtema, iduser, texto, idcita)
+	if resultado:
+		return render_template("respondiendomensajeforo.html", idtema = idtema, nomtema = nomtema)
+	else:
+		return render_template("errormensajeforo.html")
