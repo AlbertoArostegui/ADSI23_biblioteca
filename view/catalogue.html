@@ -34,6 +34,15 @@
                         {% if book.description: %}
                         <p class="card-text">{{book.description}}</p>
                         {% endif %}
+
+                        {% if 'user' in request.__dict__ and request.user and request.user.token %}
+                        <form action="/reserve-book" method="post">
+                            <input type="hidden" name="book_id" value="{{ book.id }}">
+                            <input type="hidden" name="user_id" value="{{ request.user.id }}">
+                            <button type="submit" class="btn btn-primary">Reservar</button>
+                        </form>
+                        {% endif %}
+
                     </div>
                 </div>
             </div>
