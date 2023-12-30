@@ -43,6 +43,34 @@ def catalogue():
 	                       total_pages=total_pages, max=max, min=min)
 
 
+@app.route('/reserva_exitosa')
+def reserva_exitosa():
+    return render_template('reserva_exitosa.html')
+
+
+@app.route('/reserve-book', methods=['POST'])
+def reserve_book():
+    insertar = Connection()
+    user_id = request.form.get('user_id')
+    book_id = request.form.get('book_id')
+
+    fecha_inicio = datetime.now()
+    fecha_fin = fecha_inicio + timedelta(days=60)
+    fecha_ini_str = fecha_inicio.strftime('%Y-%m-%d')
+    fecha_fin_str = fecha_fin.strftime('%Y-%m-%d')
+
+    # Preparar los parámetros para la consulta SQL como una tupla
+    p = (user_id, book_id, fecha_ini_str, fecha_fin_str)
+
+    # Pasar la sentencia SQL con marcadores de estilo de SQLite y la tupla de parámetros al método insert
+    if insertar.insert("INSERT INTO reserva (user_id, book_id, fecha_inicio, fecha_fin) VALUES (?, ?, ?, ?)", p):
+        # Reserva exitosa, redirigir o mostrar un mensaje
+        return redirect('reserva_exitosa')
+    else:
+        # Error en la reserva, manejar adecuadamente
+        return "Error en la reserva", 400
+	    
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	if 'user' in dir(request) and request.user and request.user.token:
