@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if 'user' in request.__dict__ and request.user and request.user.token: %}
+<div class="container p-5 my-5 border">
+    <h1>Respuesta enviada</h1>
+    <p>Respuesta enviada con éxito.</p>
+    <form action="/entrartema" method="POST">
+        <input type="hidden" name="nomtema" value="{{nomtema}}">
+        <input type="hidden" name="idtema" value="{{idtema}}">
+        <input type="submit" value="Volver al tema" class="botonforero">
+    </form>
+</div>
+{% else %}
+<p class="container p-5 my-5 border">Inicia sesión para usar el foro.</p>
+{% endif %}
+{% endblock %}

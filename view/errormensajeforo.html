@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if 'user' in request.__dict__ and request.user and request.user.token: %}
+<div class="container p-5 my-5 border">
+    <h1>Error</h1>
+    <p>No pudo enviarse el mensaje.</p>
+    <a href="/forum">Volver al foro</a>
+</div>
+{% else %}
+<p class="container p-5 my-5 border">Inicia sesión para usar el foro.</p>
+{% endif %}
+{% endblock %}

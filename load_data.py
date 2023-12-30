@@ -11,6 +11,17 @@ cur = con.cursor()
 
 ### Create tables
 cur.execute("""
+	CREATE TABLE reserva(
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		user_id integer,
+		book_id integer,
+		fecha_inicio date,
+		fecha_fin date,
+		FOREIGN KEY(user_id) REFERENCES User(id),
+		FOREIGN KEY(book_id) REFERENCES Book(id)
+	)
+""")
+cur.execute("""
 	CREATE TABLE Author(
 		id integer primary key AUTOINCREMENT,
 		name varchar(40)
@@ -46,6 +57,19 @@ cur.execute("""
 		FOREIGN KEY(user_id) REFERENCES User(id)
 	)
 """)
+
+cur.execute("""
+	CREATE TABLE reserva(
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		user_id integer,
+		book_id integer,
+		fecha_inicio date,
+		fecha_fin date,
+		FOREIGN KEY(user_id) REFERENCES User(id),
+		FOREIGN KEY(book_id) REFERENCES Book(id)
+	)
+""")
+
 
 ### Insert users
 
