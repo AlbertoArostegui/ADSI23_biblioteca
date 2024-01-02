@@ -10,11 +10,21 @@
     <div class="book-info">
         {% if book.cover: %}
         <img src="{{book.cover}}" class="rounded" style="max-width: 6rem; height: fit-content;">
-        {% endif %}        
-        <h2 class="book-title">{{ book.title }}</h2>
+        {% endif %}
+        <div class="book-title-author">
+            <h2 class="book-title">{{ book.title }}</h2>
+            <h4 class="book-subtitle mb-2 text-muted">{{book.author }}</h4>
+        </div>
+        <style>
+            .book-title-author {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        </style>
     </div>
 
-    <hr class="hr" />
 
     <h4>Overall Rating</h4>
     <div id="stars">
