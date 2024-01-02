@@ -1,4 +1,4 @@
-from model import Connection, Book, User
+from model import Connection, Book, User, Review
 from model.tools import hash_password
 
 
@@ -162,3 +162,8 @@ class LibraryController:
 	def save_review(self, book_id, user_email, rating, review_text):
 		exito = db.insert("INSERT INTO Reviews (book_id, user_email, rating, review_text) VALUES ( ?, ?, ?, ?)", (book_id, user_email, rating, review_text))
 		return 1 if exito else 0
+
+	def get_reviews_by_book_id(self, book_id):
+		query = "SELECT * FROM Reviews WHERE book_id = ? ORDER BY date_time DESC"
+		reviews = db.select(query, (book_id,))
+		return reviews

@@ -1,6 +1,8 @@
 from .LibraryController import LibraryController
 from flask import Flask, render_template, request, make_response, redirect, jsonify, url_for
 import sqlite3
+from datetime import datetime
+
 
 app = Flask(__name__, static_url_path='', static_folder='../view/static', template_folder='../view/')
 
@@ -201,5 +203,18 @@ def post_review():
 		print("review guardada")
 		return redirect('/catalogue')
 
+@app.route('/read-reviews')
+def read_reviews():
+	bookId = request.args.get('bookId', type=int)
+	book = library.search_book_by_id(bookId)
+	reviews = library.get_reviews_by_book_id(bookId)
+	return render_template('read_reviews.html', reviews=reviews, book=book)
 
-	
+
+@app.template_filter('formatdatetime')
+def format_datetime(value):
+	if value is None:
+		return ""
+
+	datetime_object = datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
+	return datetime_object.strftime('%B %d %Y, %H:%M:%S')

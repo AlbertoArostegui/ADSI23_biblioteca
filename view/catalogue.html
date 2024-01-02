@@ -37,7 +37,7 @@
                         {% endif %}
                         
                         <div class="d-flex justify-content-between">
-                            <a href="/readreviews?bookId={{book.id}}">
+                            <a href="/read-reviews?bookId={{book.id}}">
                                 <button class="btn btn-secondary mr-2">Read Reviews</button>
                             </a>
                             {% if 'user' in request.__dict__ and request.user and request.user.token: %}
