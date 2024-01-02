@@ -197,5 +197,9 @@ def review():
 def post_review():
 	data = request.get_json()
 	resultado = library.save_review(data['book_id'], data['user_email'], data['rating'], data['review_text'])
-	if resultado:
-			return render_template("index.html")
+	if resultado == 1:
+		print("review guardada")
+		return redirect('/catalogue')
+
+
+	

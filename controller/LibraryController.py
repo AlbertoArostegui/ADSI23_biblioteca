@@ -148,6 +148,7 @@ class LibraryController:
 
 		except Exception as e:
 			print(f"Error añadiendo libros: {e}")
+
 	def delete_usuario(self, id, nombre, email, contraseña, esadmin):
 		try:
 			db.delete("""

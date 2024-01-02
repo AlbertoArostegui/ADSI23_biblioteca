@@ -90,25 +90,29 @@
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    book_id: bookId, // Replace with your actual book ID
-                    user_email: userEmail, // Replace with your actual user email
+                    book_id: bookId,
+                    user_email: userEmail,
                     rating: rating,
                     review_text: review_text,
+                    date_time: new Date().toISOString(),
                 }),
             })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
+
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                // No need to return response.url
+            })
+            .then(() => {
+                window.location.href = '/catalogue'; // Replace with your desired URL
             })
             .catch((error) => {
                 console.error('Error:', error);
             });
-            
         });
-
-
+        
     </script>
-
 
     <style>
         .star {
@@ -140,6 +144,7 @@
             resize: vertical;
             /* Allow the text box to be resized only vertically */
         }
+
     </style>
 
 </div>
