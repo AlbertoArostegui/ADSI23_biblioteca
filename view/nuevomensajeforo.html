@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if 'user' in request.__dict__ and request.user and request.user.token: %}
+<div class="container p-5 my-5 border">
+    <h1>Nuevo mensaje</h1>
+    <form action="/mandandomensajeforo" method="post">
+        <label for="primermensaje"><b>Nuevo mensaje </b></label>
+        <input name="nuevomensaje" minlength="1" maxlength="63" class="inputforero" type="text" placeholder="Ej: Me encanto el desarrollo de la historia, ¿y a vosotros?">
+        <br>
+        <input name="iduser" type="hidden" value="{{request.user.id}}">
+        <input name="idtema" type="hidden" value="{{idtema}}">
+        <input name="nomtema" type="hidden" value="{{nomtema}}">
+        <input type="submit" class="botonforero" value="Enviar">
+    </form>
+</div>
+{% else %}
+<p class="container p-5 my-5 border">Inicia sesión para usar el foro.</p>
+{% endif %}
+{% endblock %}
