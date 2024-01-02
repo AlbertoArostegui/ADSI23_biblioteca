@@ -1,5 +1,5 @@
 from .LibraryController import LibraryController
-from flask import Flask, render_template, request, make_response, redirect, jsonify
+from flask import Flask, render_template, request, make_response, redirect, jsonify, url_for
 
 app = Flask(__name__, static_url_path='', static_folder='../view/static', template_folder='../view/')
 
@@ -31,6 +31,29 @@ def add_cookies(response):
 def index():
 	return render_template('index.html')
 
+
+@app.route('/admin')
+def admin():
+	return render_template('admin.html')
+@app.route('/gestor_libros')
+def gestor_libros():
+	titulo = request.values.get("titulo", "")
+	autor = request.values.get("autor", "")
+	portada = request.values.get("portada", "")
+	descripcion = request.values.get("descripcion", "")
+	if titulo != "" and autor != "" and portada != "" and descripcion != "":
+		library.add_book(titulo, autor, portada, descripcion)
+	return render_template('gestor_libros.html')
+@app.route('/gestor_usuarios')
+def gestor_usuarios():
+	usuarios = library.get_all_users()
+	nombre = request.values.get("nombre", "")
+	email = request.values.get("email", "")
+	contraseña = request.values.get("contraseña", "")
+	esadmin = request.values.get("esadmin", "")
+	if usuarios != "" and nombre != "" and email != "" and contraseña != "" and esadmin in ["0", "1"]:
+		library.add_usuario(nombre,email,contraseña,esadmin)
+	return render_template('gestor_usuarios.html', usuarios=usuarios)
 
 @app.route('/catalogue')
 def catalogue():
@@ -77,3 +100,7 @@ def review():
 	book = library.search_book_by_id(bookId)
 	return render_template('review.html', book=book)
 
+@app.route('/eliminar_usuario')
+def eliminar_usuario():
+	library.delete_usuario(request.values.get("id", ""), request.values.get("nombre", ""), request.values.get("email", ""), request.values.get("contraseña",""), request.values.get("esadmin",""))
+	return redirect('/gestor_usuarios')

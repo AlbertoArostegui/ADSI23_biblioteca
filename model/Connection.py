@@ -29,7 +29,8 @@ class Connection:
 			self.cur.execute(sentence)
 		self.con.commit()
 		answ = self.cur.rowcount
-		return answ
+		id = self.cur.lastrowid  # la ultima id generada
+		return answ,id
 
 	def update(self, sentence, parameters=None):
 		if parameters:

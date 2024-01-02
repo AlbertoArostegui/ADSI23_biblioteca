@@ -4,25 +4,36 @@
       "id": "a1",
       "nombres": "James Gomez",
       "email": "james@gmail.com",
-      "password": "123456"
+      "password": "123456",
+      "admin": "0"
     },
     {
       "nombres": "Jhon Doe",
       "email": "jhon@gmail.com",
       "password": "123",
-      "id": "IPB7fSC"
+      "id": "IPB7fSC",
+      "admin": "0"
     },
     {
       "nombres": "Juan Ejemplo",
       "email": "ejemplo@gmail.com",
       "password": "123456",
-      "id": "NgbZCib"
+      "id": "NgbZCib",
+      "admin": "0"
     },
     {
       "nombres": "Juan Ejemplo",
       "email": "ejemplo@gmail.com",
       "password": "123456",
-      "id": "S_Faisg"
+      "id": "S_Faisg",
+      "admin": "0"
+    },
+    {
+      "nombres": "admin",
+      "email": "admin@admin.admin",
+      "password": "admin",
+      "id": "admin",
+      "admin": "1"
     }
   ]
 }
