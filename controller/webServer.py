@@ -75,6 +75,5 @@ def logout():
 def review():
 	bookId = request.args.get('bookId', type=int)
 	book = library.search_book_by_id(bookId)
-	print(book.author)
 	return render_template('review.html', book=book)
 
