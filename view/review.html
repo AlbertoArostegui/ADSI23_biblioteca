@@ -40,19 +40,24 @@
         <span class="star">&#9734;</span>
         <span class="star">&#9734;</span>
     </div>
+    <h4 id="star-count">1 Star Selected</h4>
 
     <hr class="hr" />
 
     <h4>Add a written review</h4>
     <div>
-        <textarea class="review-box" placeholder="Write a review"></textarea>
+        <textarea class="review-box" id="review-text" placeholder="Write a review"></textarea>
     </div>
-    <button class="btn btn-primary" onclick="postReview()">Post Review</button>
+
+    <button class="btn btn-primary" id="post-review">Post Review</button>
+
+
 
 
     <script>
         var stars = document.querySelectorAll('.star');
         var selectedStars = 1; // Set the selectedStars variable to 1
+        var starCountElement = document.getElementById('star-count'); // Get the star count element
 
         stars.forEach(function (star, index) {
             star.addEventListener('click', function () {
@@ -60,11 +65,46 @@
                 stars.forEach(function (star, i) {
                     star.innerHTML = i < selectedStars ? '&#9733;' : '&#9734;';
                 });
+                starCountElement.textContent = selectedStars + ' Star' + (selectedStars > 1 ? 's' : '') + ' Selected'; // Update the star count
+                selectedStarsInput.value = selectedStars; // Update the hidden input value
             });
         });
 
         // Highlight the first star when the page loads
         stars[0].innerHTML = '&#9733;';
+
+        document.getElementById('post-review').addEventListener('click', function() {
+            var review_text = document.getElementById('review-text').value;
+            var rating = selectedStars;
+            var urlParams = new URLSearchParams(window.location.search);
+            var bookId = urlParams.get('bookId'); // Replace 'id' with the actual parameter name
+            var userEmail = '{{ request.user.email }}';
+            console.log('review_text', review_text);
+            console.log('rating', rating);  
+            console.log('bookId', bookId);
+            console.log('userEmail', userEmail);
+            
+            fetch('/post-review', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    book_id: bookId, // Replace with your actual book ID
+                    user_email: userEmail, // Replace with your actual user email
+                    rating: rating,
+                    review_text: review_text,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+            
+        });
 
 
     </script>

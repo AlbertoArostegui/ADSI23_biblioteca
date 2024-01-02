@@ -1,9 +1,12 @@
 from .LibraryController import LibraryController
 from flask import Flask, render_template, request, make_response, redirect, jsonify, url_for
+import sqlite3
 
 app = Flask(__name__, static_url_path='', static_folder='../view/static', template_folder='../view/')
 
 
+con = sqlite3.connect("datos.db")
+cur = con.cursor()
 library = LibraryController()
 
 
@@ -35,6 +38,7 @@ def index():
 @app.route('/admin')
 def admin():
 	return render_template('admin.html')
+
 @app.route('/gestor_libros')
 def gestor_libros():
 	titulo = request.values.get("titulo", "")
@@ -44,6 +48,7 @@ def gestor_libros():
 	if titulo != "" and autor != "" and portada != "" and descripcion != "":
 		library.add_book(titulo, autor, portada, descripcion)
 	return render_template('gestor_libros.html')
+
 @app.route('/gestor_usuarios')
 def gestor_usuarios():
 	usuarios = library.get_all_users()
@@ -63,8 +68,7 @@ def catalogue():
 	books, nb_books = library.search_books(title=title, author=author, page=page - 1)
 	total_pages = (nb_books // 6) + 1
 	return render_template('catalogue.html', books=books, title=title, author=author, current_page=page,
-	                       total_pages=total_pages, max=max, min=min)
-
+						   total_pages=total_pages, max=max, min=min)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -174,13 +178,24 @@ def respondiendomensajeforo():
 	else:
 		return render_template("errormensajeforo.html")
 
-@app.route('/review')
-def review():
-	bookId = request.args.get('bookId', type=int)
-	book = library.search_book_by_id(bookId)
-	return render_template('review.html', book=book)
 
 @app.route('/eliminar_usuario')
 def eliminar_usuario():
 	library.delete_usuario(request.values.get("id", ""), request.values.get("nombre", ""), request.values.get("email", ""), request.values.get("contraseña",""), request.values.get("esadmin",""))
 	return redirect('/gestor_usuarios')
+
+
+@app.route('/review')
+def review():
+	if 'user' not in dir(request) or not request.user or not request.user.token:
+		return redirect('/')
+	bookId = request.args.get('bookId', type=int)
+	book = library.search_book_by_id(bookId)
+	return render_template('review.html', book=book)
+
+@app.route('/post-review', methods=['POST'])
+def post_review():
+	data = request.get_json()
+	resultado = library.save_review(data['book_id'], data['user_email'], data['rating'], data['review_text'])
+	if resultado:
+			return render_template("index.html")

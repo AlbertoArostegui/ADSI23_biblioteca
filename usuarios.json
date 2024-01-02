@@ -15,10 +15,39 @@
       "admin": "0"
     },
     {
+      "nombres": "Lulu Bilbao",
+      "email": "trances@gmail.com",
+      "password": "123456",
+      "id": "45949206J",
+      "admin": "0"
+    },
+    {
+      "nombres": "Juan Ejemplo",
+      "email": "ejemplo@gmail.com",
+      "password": "123456",
+      "id": "NgbZCib",
+      "admin": "0"
+    },
+    {
+      "nombres": "Juan Ejemplo",
+      "email": "ejemplo@gmail.com",
+      "password": "123456",
+      "id": "S_Faisg",
+      "admin": "0"
+    },
+    {
+      "nombres": "admin",
+      "email": "admin@admin.admin",
+      "password": "admin",
+      "id": "admin",
+      "admin": "1"
+    },
+    {
       "nombres": "Juan Alguien",
       "email": "ejemplo@gmail.com",
       "password": "123456",
-      "id": "1"
+      "id": "1",
+      "admin": "0"
     }
   ]
 }

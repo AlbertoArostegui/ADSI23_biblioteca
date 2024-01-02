@@ -156,3 +156,8 @@ class LibraryController:
 			      """, (id, nombre, email, contraseña, esadmin,))
 		except Exception as e:
 			print(f"Error borrando usuario: {e}")
+
+
+	def save_review(self, book_id, user_email, rating, review_text):
+		exito = db.insert("INSERT INTO Reviews (book_id, user_email, rating, review_text) VALUES ( ?, ?, ?, ?)", (book_id, user_email, rating, review_text))
+		return 1 if exito else 0

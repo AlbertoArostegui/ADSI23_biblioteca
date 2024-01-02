@@ -76,6 +76,16 @@ cur.execute("""
 	INSERT INTO TemaMensaje VALUES (1,"Primer Tema Mensaje",1, 1, NULL)
 """)
 
+cur.execute("""
+	CREATE TABLE Reviews (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		book_id INTEGER,
+		user_email TEXT,
+		date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		rating INTEGER,
+		review_text TEXT
+	)
+""")
 ### Insert users
 
 with open('usuarios.json', 'r') as f:
