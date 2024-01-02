@@ -35,6 +35,18 @@ class LibraryController:
 		]
 		return books, count
 
+	def search_book_by_id(self, book_id):
+		res = db.select("""
+				SELECT b.* 
+				FROM Book b
+				WHERE b.id = ?
+		""", (book_id,))
+		if len(res) > 0:
+			book = Book(res[0][0], res[0][1], res[0][2], res[0][3], res[0][4])
+			return book
+		else:
+			return None
+
 	def get_user(self, email, password):
 		user = db.select("SELECT * from User WHERE email = ? AND password = ?", (email, hash_password(password)))
 		if len(user) > 0:

@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container p-5 my-5 border">
+    <h1>Book Review of:</h1>
+
+    <hr class="hr" />
+
+    <div class="book-info">
+        {% if book.cover: %}
+        <img src="{{book.cover}}" class="rounded" style="max-width: 6rem; height: fit-content;">
+        {% endif %}        
+        <h2 class="book-title">{{ book.title }}</h2>
+    </div>
+
+    <hr class="hr" />
+
+    <h4>Overall Rating</h4>
+    <div id="stars">
+        <span class="star">&#9734;</span>
+        <span class="star">&#9734;</span>
+        <span class="star">&#9734;</span>
+        <span class="star">&#9734;</span>
+        <span class="star">&#9734;</span>
+        <span class="star">&#9734;</span>
+        <span class="star">&#9734;</span>
+        <span class="star">&#9734;</span>
+        <span class="star">&#9734;</span>
+        <span class="star">&#9734;</span>
+    </div>
+
+    <hr class="hr" />
+
+    <h4>Add a written review</h4>
+    <div>
+        <textarea class="review-box" placeholder="Write a review"></textarea>
+    </div>
+    <button class="btn btn-primary" onclick="postReview()">Post Review</button>
+
+
+    <script>
+        var stars = document.querySelectorAll('.star');
+        var selectedStars = 1; // Set the selectedStars variable to 1
+
+        stars.forEach(function (star, index) {
+            star.addEventListener('click', function () {
+                selectedStars = index + 1;
+                stars.forEach(function (star, i) {
+                    star.innerHTML = i < selectedStars ? '&#9733;' : '&#9734;';
+                });
+            });
+        });
+
+        // Highlight the first star when the page loads
+        stars[0].innerHTML = '&#9733;';
+
+
+    </script>
+
+
+    <style>
+        .star {
+            font-size: 3em;
+            /* Adjust this value to change the size of the stars */
+            cursor: pointer;
+        }
+
+        .book-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .book-image {
+            width: 100px;
+            /* Adjust this value to change the size of the image */
+        }
+
+        .book-title {
+            margin: 0;
+        }
+
+        .review-box {
+            width: 100%;
+            /* Make the text box full width */
+            height: 200px;
+            /* Set a fixed height */
+            resize: vertical;
+            /* Allow the text box to be resized only vertically */
+        }
+    </style>
+
+</div>
+{% endblock %}

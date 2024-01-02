@@ -1,5 +1,5 @@
 from .LibraryController import LibraryController
-from flask import Flask, render_template, request, make_response, redirect
+from flask import Flask, render_template, request, make_response, redirect, jsonify
 
 app = Flask(__name__, static_url_path='', static_folder='../view/static', template_folder='../view/')
 
@@ -70,3 +70,11 @@ def logout():
 		request.user.delete_session(request.user.token)
 		request.user = None
 	return resp
+
+@app.route('/review')
+def review():
+	bookId = request.args.get('bookId', type=int)
+	book = library.search_book_by_id(bookId)
+	print(book.author)
+	return render_template('review.html', book=book)
+
