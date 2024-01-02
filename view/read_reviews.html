@@ -27,12 +27,13 @@
     <hr class="hr" />
 
     <h2>All Reviews:</h2>
-
+    {% if 'user' in request.__dict__ and request.user and request.user.token: %}
     <div class="text-center m-3">
         <a href="/review?bookId={{book.id}}">
             <button class="btn btn-primary">Write a Review</button>
         </a>
     </div>
+    {% endif %}
 
     <div class="row">
         {% for review in reviews %}
@@ -49,8 +50,10 @@
                             <p class="card-text">
                                 <small class="text-muted">Rating: {{review[4]}}</small>
                             </p>
-                            {% if request.user.admin == 1 %}
-                                <button class="btn btn-danger">Delete Review</button>
+                            {% if 'user' in request.__dict__ and request.user and request.user.token: %}
+                                {% if request.user.admin == 1 %}
+                                    <button class="btn btn-danger">Delete Review</button>
+                                {% endif %}
                             {% endif %}
                         </div>
                     </div>

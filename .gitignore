@@ -161,4 +161,4 @@ cython_debug/
 
 
 #Database
-datos.db
+.datos.db
