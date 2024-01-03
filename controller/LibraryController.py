@@ -173,6 +173,17 @@ class LibraryController:
 		review = db.select(query, (review_id,))
 		return review[0] if len(review) > 0 else None
 	
+	def edit_review(self, review_id, rating, review_text):
+		try:
+			db.update("""
+			          UPDATE Reviews
+			          SET rating = ?, review_text = ?
+			          WHERE id = ?
+			      """, (rating, review_text, review_id,))
+		except Exception as e:
+			print(f"Error editando review: {e}")
+
+	
 	def delete_review(self, review_id):
 		try:
 			db.delete("""

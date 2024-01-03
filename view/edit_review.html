@@ -85,17 +85,17 @@
             var rating = selectedStars;
             var bookId = "{{ book.id }}" ;
             var userEmail = '{{ review[2] }}';
-            console.log('review_text', review_text);
-            console.log('rating', rating);  
-            console.log('bookId', bookId);
-            console.log('userEmail', userEmail);
+            var urlParams = new URLSearchParams(window.location.search);
+            var reviewID = urlParams.get('reviewId'); // Replace 'id' with the actual parameter name
+
             
-            fetch('/post-review', {
+            fetch('/update-review', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    id: reviewID,
                     book_id: bookId,
                     user_email: userEmail,
                     rating: rating,
@@ -124,6 +124,7 @@
         .star {
             font-size: 3em;
             /* Adjust this value to change the size of the stars */
+            color: orange;
             cursor: pointer;
         }
 

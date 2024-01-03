@@ -202,6 +202,7 @@ def post_review():
 	if resultado == 1:
 		print("review guardada")
 		return redirect('/catalogue')
+	
 
 @app.route('/read-reviews')
 def read_reviews():
@@ -232,3 +233,10 @@ def delete_review():
 	review = library.get_review_by_id(reviewId)
 	library.delete_review(reviewId)
 	return redirect(url_for('read_reviews', bookId=review[1]))
+
+@app.route('/update-review', methods=['POST'])
+def update_review():
+	data = request.get_json()
+	library.edit_review(data['id'], data['rating'], data['review_text'])
+	print("review editada")
+	return redirect(url_for('read_reviews', bookId=data['book_id']))

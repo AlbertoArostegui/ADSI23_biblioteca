@@ -79,10 +79,7 @@
             var urlParams = new URLSearchParams(window.location.search);
             var bookId = urlParams.get('bookId'); // Replace 'id' with the actual parameter name
             var userEmail = '{{ request.user.email }}';
-            console.log('review_text', review_text);
-            console.log('rating', rating);  
-            console.log('bookId', bookId);
-            console.log('userEmail', userEmail);
+           
             
             fetch('/post-review', {
                 method: 'POST',
