@@ -30,11 +30,11 @@
     
     {% if reviews|length == 0 %}
         {% if 'user' in request.__dict__ and request.user and request.user.token: %}
-        <div class="text-center m-3">
-            <a href="/review?bookId={{book.id}}">
-                <button class="btn btn-primary">Write a Review</button>
-            </a>
-        </div>
+            <div class="text-center m-3">
+                <a href="/review?bookId={{book.id}}">
+                    <button class="btn btn-primary">Write a Review</button>
+                </a>
+            </div>
         {% endif %}
         <h4 class="text-center">No reviews yet &colon;&lpar;</h4>
         {% if 'user' in request.__dict__ and request.user and request.user.token: %}
@@ -50,11 +50,19 @@
         {% endif %}
     {% else %}
         {% if 'user' in request.__dict__ and request.user and request.user.token: %}
+            {% set ns = namespace(reviewed=False) %}
+            {% for review in reviews %}
+                {% if review[2] == request.user.email%}
+                {% set ns.reviewed = True %}
+                {% endif %}
+            {% endfor %}
+            {% if not ns.reviewed %}
             <div class="text-center m-3">
                 <a href="/review?bookId={{book.id}}">
                     <button class="btn btn-primary">Write a Review</button>
                 </a>
             </div>
+            {% endif %}
         {% else %}
             <h4 class="text-center">Log in to write a review!</h4>
             <div class="text-center m-3">
