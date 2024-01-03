@@ -49,8 +49,12 @@
         <textarea class="review-box" id="review-text" placeholder="Write a review">{{review[5]}}</textarea>
     </div>
 
-    <button class="btn btn-primary" id="post-review">Post Review</button>
-
+    <div class="d-flex justify-content-between mt-2">
+        <button class="btn btn-primary" id="post-review">Post Review</button>
+        <a href="/delete-review?reviewId={{review[0]}}">
+            <button class="btn btn-danger ">Delete Review</button>
+        </a>
+    </div>
 
 
 
