@@ -78,9 +78,6 @@ def catalogue():
 	user_reviews = []
 	if 'user' in dir(request) and request.user and request.user.token:
 		user_reviews = library.get_reviews_by_user(request.user.email)
-	for review in user_reviews:
-		print(review)
-		print("------------------")
 	return render_template('catalogue.html', books=books, title=title, author=author, current_page=page,
 						   total_pages=total_pages, max=max, min=min, user_reviews=user_reviews)
 
