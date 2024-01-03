@@ -105,7 +105,7 @@
                 // No need to return response.url
             })
             .then(() => {
-                window.location.href = '/catalogue'; // Replace with your desired URL
+                window.location.href = '/read-reviews?bookId=' + bookId ;
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -118,6 +118,7 @@
         .star {
             font-size: 3em;
             /* Adjust this value to change the size of the stars */
+            color: orange;
             cursor: pointer;
         }
 

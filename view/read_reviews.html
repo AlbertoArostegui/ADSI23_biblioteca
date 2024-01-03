@@ -45,16 +45,31 @@
                             <h5 class="card-title m-3">{{review[2]}}</h5>
                         </div>
                         <p class="text-muted">Written on: {{review[3]|formatdatetime}}</p>
-                        <p class="card-text">Text: {{review[5]}}</p>
-                        <div class="d-flex justify-content-between mt-auto">
-                            <p class="card-text">
-                                <small class="text-muted">Rating: {{review[4]}}</small>
-                            </p>
+                        <p class="card-text">
+                            Rating: 
+                            {% for i in range(review[4]) %}
+                                <span class="star">&#9733;</span>
+                            {% endfor %}
+                            {% for i in range(10 - review[4]) %}
+                                <span class="star">&#9734;</span>
+                            {% endfor %}
+                            {{review[4]}}/10
+                        </p>
+                        <p class="card-text">{{review[5]}}</p>
+                        <div class="d-flex justify-content-between mt-2">
                             {% if 'user' in request.__dict__ and request.user and request.user.token: %}
-                                {% if request.user.admin == 1 %}
-                                    <button class="btn btn-danger">Delete Review</button>
+                                {% if request.user.admin == 1  or request.user.email == review[2]%} <!-- si eres admin o el autor-->
+                                    <a href="/delete-review?reviewId={{review[0]}}">
+                                        <button class="btn btn-danger ">Delete Review</button>
+                                    </a>
+                                {% endif %}
+                                {% if request.user.email == review[2] %} <!-- si eres el autor -->
+                                    <a href="/edit-review?reviewId={{review[0]}}">
+                                        <button class="btn btn-info ">Edit My Review</button>
+                                    </a>
                                 {% endif %}
                             {% endif %}
+                            
                         </div>
                     </div>
                 </div>
@@ -64,8 +79,9 @@
 
     <style>
         .star {
-            font-size: 3em;
+            font-size: 1.5em;
             /* Adjust this value to change the size of the stars */
+            color: orange;
             cursor: pointer;
         }
 

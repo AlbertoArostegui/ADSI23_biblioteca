@@ -218,3 +218,17 @@ def format_datetime(value):
 
 	datetime_object = datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
 	return datetime_object.strftime('%B %d %Y, %H:%M:%S')
+
+@app.route('/edit-review')
+def edit_review():
+	reviewId = request.args.get('reviewId', type=int)
+	review = library.get_review_by_id(reviewId)
+	book = library.search_book_by_id(review[1])
+	return render_template('edit_review.html', review=review, book=book)
+
+@app.route('/delete-review')
+def delete_review():
+	reviewId = request.args.get('reviewId', type=int)
+	review = library.get_review_by_id(reviewId)
+	library.delete_review(reviewId)
+	return redirect(url_for('read_reviews', bookId=review[1]))

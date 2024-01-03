@@ -167,3 +167,17 @@ class LibraryController:
 		query = "SELECT * FROM Reviews WHERE book_id = ? ORDER BY date_time DESC"
 		reviews = db.select(query, (book_id,))
 		return reviews
+
+	def get_review_by_id(self, review_id):
+		query = "SELECT * FROM Reviews WHERE id = ?"
+		review = db.select(query, (review_id,))
+		return review[0] if len(review) > 0 else None
+	
+	def delete_review(self, review_id):
+		try:
+			db.delete("""
+			          DELETE FROM Reviews
+			          WHERE id = ?
+			      """, (review_id,))
+		except Exception as e:
+			print(f"Error borrando review: {e}")

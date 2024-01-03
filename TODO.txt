@@ -1,3 +1,4 @@
 TODO:
     - boton elimimnar reseñas
+    - que solo puedas escribir una reseña
     - añadir varias reseñas a los libros
