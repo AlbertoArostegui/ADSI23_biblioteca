@@ -40,12 +40,24 @@
                             <a href="/read-reviews?bookId={{book.id}}">
                                 <button class="btn btn-secondary mr-2">Read Reviews</button>
                             </a>
-                            {% if 'user' in request.__dict__ and request.user and request.user.token: %}
-                            <a href="/review?bookId={{book.id}}">
-                                <button class="btn btn-primary">Write a Review</button>
-                            </a>
+                            {% set ns = namespace(reviewed=False) %}
+                            {% for review in user_reviews %}
+                                {% if review[1] == book.id %}
+                                    {% set ns.reviewed = True %}
+                                    <a href="/edit-review?reviewId={{review[0]}}">
+                                        <button class="btn btn-info ">Edit My Review </button>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                            {% if not ns.reviewed %}
+                                <a href="/review?bookId={{book.id}}">
+                                    <button class="btn btn-primary ">Write a Review </button>
+                                </a>
                             {% endif %}
+
                         </div>
+
+
 
                     </div>
                 </div>

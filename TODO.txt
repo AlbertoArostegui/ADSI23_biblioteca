@@ -1,4 +1,2 @@
 TODO:
     - unit tests
-    - que solo puedas escribir una reseña
-    - añadir varias reseñas a los libros

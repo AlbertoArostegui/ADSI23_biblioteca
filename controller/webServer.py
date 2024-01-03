@@ -69,8 +69,17 @@ def catalogue():
 	page = int(request.values.get("page", 1))
 	books, nb_books = library.search_books(title=title, author=author, page=page - 1)
 	total_pages = (nb_books // 6) + 1
+
+	# Fetch the reviews of the current user
+	user_reviews = []
+	if 'user' in dir(request) and request.user and request.user.token:
+		user_reviews = library.get_reviews_by_user(request.user.email)
+	for review in user_reviews:
+		print(review)
+		print("------------------")
 	return render_template('catalogue.html', books=books, title=title, author=author, current_page=page,
-						   total_pages=total_pages, max=max, min=min)
+						   total_pages=total_pages, max=max, min=min, user_reviews=user_reviews)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -200,7 +209,6 @@ def post_review():
 	data = request.get_json()
 	resultado = library.save_review(data['book_id'], data['user_email'], data['rating'], data['review_text'])
 	if resultado == 1:
-		print("review guardada")
 		return redirect('/catalogue')
 	
 
@@ -238,5 +246,4 @@ def delete_review():
 def update_review():
 	data = request.get_json()
 	library.edit_review(data['id'], data['rating'], data['review_text'])
-	print("review editada")
 	return redirect(url_for('read_reviews', bookId=data['book_id']))

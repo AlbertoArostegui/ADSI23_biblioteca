@@ -192,3 +192,9 @@ class LibraryController:
 			      """, (review_id,))
 		except Exception as e:
 			print(f"Error borrando review: {e}")
+
+
+	def get_reviews_by_user(self, user_email):
+		query = "SELECT * FROM Reviews WHERE user_email = ? ORDER BY date_time DESC"
+		reviews = db.select(query, (user_email,))
+		return reviews
