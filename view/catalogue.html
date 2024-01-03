@@ -36,40 +36,41 @@
                         <p class="card-text flex-grow-1">{{book.description}}</p>
                         {% endif %}
 
-                        {% if 'user' in request.__dict__ and request.user and request.user.token %}
-                        <form action="/reserve-book" method="post">
-                            <input type="hidden" name="book_id" value="{{ book.id }}">
-                            <input type="hidden" name="user_id" value="{{ request.user.id }}">
-                            <button type="submit" class="btn btn-primary">Reservar</button>
-                        </form>
-                        {% endif %}
-     
+                        
                         
                         <div class="d-flex justify-content-between">
                             <a href="/read-reviews?bookId={{book.id}}">
                                 <button class="btn btn-secondary mr-2">Read Reviews</button>
                             </a>
                             {% if 'user' in request.__dict__ and request.user and request.user.token: %}
-                                {% set ns = namespace(reviewed=False) %}
-                                {% for review in user_reviews %}
-                                    {% if review[1] == book.id %}
-                                        {% set ns.reviewed = True %}
-                                        <a href="/edit-review?reviewId={{review[0]}}">
-                                            <button class="btn btn-info ">Edit My Review </button>
-                                        </a>
-                                    {% endif %}
-                                {% endfor %}
-                                {% if not ns.reviewed %}
-                                    <a href="/review?bookId={{book.id}}">
-                                        <button class="btn btn-primary ">Write a Review </button>
-                                    </a>
-                                {% endif %}
+                            {% set ns = namespace(reviewed=False) %}
+                            {% for review in user_reviews %}
+                            {% if review[1] == book.id %}
+                            {% set ns.reviewed = True %}
+                            <a href="/edit-review?reviewId={{review[0]}}">
+                                <button class="btn btn-info ">Edit My Review </button>
+                            </a>
                             {% endif %}
-
+                            {% endfor %}
+                            {% if not ns.reviewed %}
+                            <a href="/review?bookId={{book.id}}">
+                                <button class="btn btn-primary ">Write a Review </button>
+                            </a>
+                            {% endif %}
+                            {% endif %}
+                            
                         </div>
-
-
-
+                        
+                        <div class="d-flex justify-content-center mt-3">
+                            {% if 'user' in request.__dict__ and request.user and request.user.token %}
+                                <form action="/reserve-book" method="post" class="w-100">
+                                    <input type="hidden" name="book_id" value="{{ book.id }}">
+                                    <input type="hidden" name="user_id" value="{{ request.user.id }}">
+                                    <button type="submit" class="btn btn-success btn-lg btn-block w-100" style="font-size: larger;">Reserve this Book</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                        
                     </div>
                 </div>
             </div>

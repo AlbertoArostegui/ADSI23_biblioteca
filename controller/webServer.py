@@ -227,11 +227,6 @@ def respondiendomensajeforo():
 		return render_template("errormensajeforo.html")
 
 
-@app.route('/eliminar_usuario')
-def eliminar_usuario():
-	library.delete_usuario(request.values.get("id", ""), request.values.get("nombre", ""), request.values.get("email", ""), request.values.get("contraseña",""), request.values.get("esadmin",""))
-	return redirect('/gestor_usuarios')
-
 
 @app.route('/review')
 def review():
