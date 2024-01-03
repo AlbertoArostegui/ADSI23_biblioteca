@@ -69,6 +69,36 @@ cur.execute("""
 		review_text TEXT
 	)
 """)
+
+#foro
+cur.execute("""
+	CREATE TABLE Tema(
+		tema_id integer primary key AUTOINCREMENT,
+		titulo varchar(32),
+		creador_id integer,
+		FOREIGN KEY(creador_id) REFERENCES User(id)
+	)
+""")
+
+cur.execute("""
+	CREATE TABLE TemaMensaje(
+		mensaje_id integer primary key AUTOINCREMENT,
+		texto varchar(64),
+		autor_id integer,
+		idtema integer NOT NULL REFERENCES Tema(tema_id) ON DELETE CASCADE,
+		mensaje_resp integer,
+		FOREIGN KEY(mensaje_resp) REFERENCES TemaMensaje(mensaje_id)
+		FOREIGN KEY(autor_id) REFERENCES User(id)
+	)
+""")
+
+cur.execute("""
+	INSERT INTO Tema VALUES (1,"Primer Tema",1)
+""")
+
+cur.execute("""
+	INSERT INTO TemaMensaje VALUES (1,"Primer Tema Mensaje",1, 1, NULL)
+""")
 ### Insert users
 
 with open('usuarios.json', 'r') as f:
