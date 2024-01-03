@@ -48,6 +48,13 @@
       "password": "123456",
       "id": "1",
       "admin": "0"
+    },
+    {
+      "nombres": "Unai Bermudez",
+      "email": "unai.bermudez@gmail.com",
+      "password": "1234",
+      "id": "nose",
+      "admin": "0"
     }
   ]
 }

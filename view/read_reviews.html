@@ -27,12 +27,23 @@
     <hr class="hr" />
 
     <h2>All Reviews:</h2>
-    {% if 'user' in request.__dict__ and request.user and request.user.token: %}
-    <div class="text-center m-3">
-        <a href="/review?bookId={{book.id}}">
-            <button class="btn btn-primary">Write a Review</button>
-        </a>
-    </div>
+    {% if reviews|length == 0 %}
+        <h4 class="text-center">No reviews yet &colon;&lpar;</h4>
+        {% if 'user' in request.__dict__ and request.user and request.user.token: %}
+            <h4 class="text-center">Be the first to write one!</h4>
+            <div class="text-center m-3">
+                <a href="/review?bookId={{book.id}}">
+                    <button class="btn btn-primary">Write a Review</button>
+                </a>
+            </div>
+        {% else %}
+            <h4 class="text-center">Log in to write one!</h4>
+            <div class="text-center m-3">
+                <a href="/login">
+                    <button class="btn btn-primary">Log in</button>
+                </a>
+            </div>
+        {% endif %}
     {% endif %}
 
     <div class="row">
