@@ -2,11 +2,17 @@ from datetime import datetime, timedelta
 
 from model import Connection
 from .LibraryController import LibraryController
+from flask import Flask, render_template, request, make_response, redirect, jsonify, url_for
+import sqlite3
+from datetime import datetime
+
 from flask import Flask, render_template, request, make_response, redirect
 
 app = Flask(__name__, static_url_path='', static_folder='../view/static', template_folder='../view/')
 
 
+con = sqlite3.connect("datos.db")
+cur = con.cursor()
 library = LibraryController()
 
 
@@ -38,6 +44,7 @@ def index():
 @app.route('/admin')
 def admin():
 	return render_template('admin.html')
+
 @app.route('/gestor_libros')
 def gestor_libros():
 	titulo = request.values.get("titulo", "")
@@ -47,6 +54,7 @@ def gestor_libros():
 	if titulo != "" and autor != "" and portada != "" and descripcion != "":
 		library.add_book(titulo, autor, portada, descripcion)
 	return render_template('gestor_libros.html')
+
 @app.route('/gestor_usuarios')
 def gestor_usuarios():
 	usuarios = library.get_all_users()
@@ -65,8 +73,16 @@ def catalogue():
 	page = int(request.values.get("page", 1))
 	books, nb_books = library.search_books(title=title, author=author, page=page - 1)
 	total_pages = (nb_books // 6) + 1
+
+	# Fetch the reviews of the current user
+	user_reviews = []
+	if 'user' in dir(request) and request.user and request.user.token:
+		user_reviews = library.get_reviews_by_user(request.user.email)
+	for review in user_reviews:
+		print(review)
+		print("------------------")
 	return render_template('catalogue.html', books=books, title=title, author=author, current_page=page,
-	                       total_pages=total_pages, max=max, min=min)
+						   total_pages=total_pages, max=max, min=min, user_reviews=user_reviews)
 
 
 @app.route('/reserva_exitosa')
@@ -209,3 +225,62 @@ def respondiendomensajeforo():
 		return render_template("respondiendomensajeforo.html", idtema = idtema, nomtema = nomtema)
 	else:
 		return render_template("errormensajeforo.html")
+
+
+@app.route('/eliminar_usuario')
+def eliminar_usuario():
+	library.delete_usuario(request.values.get("id", ""), request.values.get("nombre", ""), request.values.get("email", ""), request.values.get("contraseña",""), request.values.get("esadmin",""))
+	return redirect('/gestor_usuarios')
+
+
+@app.route('/review')
+def review():
+	if 'user' not in dir(request) or not request.user or not request.user.token:
+		return redirect('/')
+	bookId = request.args.get('bookId', type=int)
+	book = library.search_book_by_id(bookId)
+	return render_template('review.html', book=book)
+
+@app.route('/post-review', methods=['POST'])
+def post_review():
+	data = request.get_json()
+	resultado = library.save_review(data['book_id'], data['user_email'], data['rating'], data['review_text'])
+	if resultado == 1:
+		return redirect('/catalogue')
+	
+
+@app.route('/read-reviews')
+def read_reviews():
+	bookId = request.args.get('bookId', type=int)
+	book = library.search_book_by_id(bookId)
+	reviews = library.get_reviews_by_book_id(bookId)
+	return render_template('read_reviews.html', reviews=reviews, book=book)
+
+
+@app.template_filter('formatdatetime')
+def format_datetime(value):
+	if value is None:
+		return ""
+
+	datetime_object = datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
+	return datetime_object.strftime('%B %d %Y, %H:%M:%S')
+
+@app.route('/edit-review')
+def edit_review():
+	reviewId = request.args.get('reviewId', type=int)
+	review = library.get_review_by_id(reviewId)
+	book = library.search_book_by_id(review[1])
+	return render_template('edit_review.html', review=review, book=book)
+
+@app.route('/delete-review')
+def delete_review():
+	reviewId = request.args.get('reviewId', type=int)
+	review = library.get_review_by_id(reviewId)
+	library.delete_review(reviewId)
+	return redirect(url_for('read_reviews', bookId=review[1]))
+
+@app.route('/update-review', methods=['POST'])
+def update_review():
+	data = request.get_json()
+	library.edit_review(data['id'], data['rating'], data['review_text'])
+	return redirect(url_for('read_reviews', bookId=data['book_id']))

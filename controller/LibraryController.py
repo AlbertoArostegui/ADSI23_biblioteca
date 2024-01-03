@@ -1,4 +1,4 @@
-from model import Connection, Book, User
+from model import Connection, Book, User, Review
 from model.tools import hash_password
 
 
@@ -35,6 +35,19 @@ class LibraryController:
 			for b in res
 		]
 		return books, count
+
+	def search_book_by_id(self, book_id):
+		res = db.select("""
+				SELECT b.* 
+				FROM Book b
+				WHERE b.id = ?
+		""", (book_id,))
+		if len(res) > 0:
+			book = Book(res[0][0], res[0][1], res[0][2], res[0][3], res[0][4])
+			return book
+		else:
+			return None
+
 	def add_book(self, titulo, autor, portada, descripcion):
 		try:
 			id = db.insert("""
@@ -86,6 +99,7 @@ class LibraryController:
 		except Exception as e:
 			print(f"Error borrando usuario: {e}")
 
+		
 	def listar_temas(self):
 		temas = db.select("SELECT titulo,tema_id FROM Tema")
 		#if len(temas) > 0:
@@ -143,3 +157,64 @@ class LibraryController:
 			return 1
 		else:
 			return 0
+		
+	def add_usuario(self, nombre, email, contraseña, esadmin):
+		try:
+			hpass = hash_password(contraseña)
+			db.insert("""
+		             INSERT INTO User (name, email, password, admin)
+		             VALUES ( ?, ?, ?, ?)
+		        """, (nombre, email, hpass, esadmin,))
+
+		except Exception as e:
+			print(f"Error añadiendo libros: {e}")
+
+	def delete_usuario(self, id, nombre, email, contraseña, esadmin):
+		try:
+			db.delete("""
+			          DELETE FROM User
+			          WHERE id = ? AND name = ? AND email = ? AND password = ? AND admin = ?
+			      """, (id, nombre, email, contraseña, esadmin,))
+		except Exception as e:
+			print(f"Error borrando usuario: {e}")
+
+
+	def save_review(self, book_id, user_email, rating, review_text):
+		exito = db.insert("INSERT INTO Reviews (book_id, user_email, rating, review_text) VALUES ( ?, ?, ?, ?)", (book_id, user_email, rating, review_text))
+		return 1 if exito else 0
+
+	def get_reviews_by_book_id(self, book_id):
+		query = "SELECT * FROM Reviews WHERE book_id = ? ORDER BY date_time DESC"
+		reviews = db.select(query, (book_id,))
+		return reviews
+
+	def get_review_by_id(self, review_id):
+		query = "SELECT * FROM Reviews WHERE id = ?"
+		review = db.select(query, (review_id,))
+		return review[0] if len(review) > 0 else None
+	
+	def edit_review(self, review_id, rating, review_text):
+		try:
+			db.update("""
+			          UPDATE Reviews
+			          SET rating = ?, review_text = ?
+			          WHERE id = ?
+			      """, (rating, review_text, review_id,))
+		except Exception as e:
+			print(f"Error editando review: {e}")
+
+	
+	def delete_review(self, review_id):
+		try:
+			db.delete("""
+			          DELETE FROM Reviews
+			          WHERE id = ?
+			      """, (review_id,))
+		except Exception as e:
+			print(f"Error borrando review: {e}")
+
+
+	def get_reviews_by_user(self, user_email):
+		query = "SELECT * FROM Reviews WHERE user_email = ? ORDER BY date_time DESC"
+		reviews = db.select(query, (user_email,))
+		return reviews
