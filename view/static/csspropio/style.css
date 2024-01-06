@@ -1,0 +1,27 @@
+.botonforero{
+    color: #235dff;
+    background-color: rgba(255, 255, 255, 0.842);
+    border: 2px solid #235dff; 
+}
+
+.botonforero:hover{
+    color: rgba(255, 255, 255, 0.842);
+    background-color: #235dff;
+}
+
+.inputforero{
+    border: 2px solid rgb(73, 173, 255);
+    width: 500px;
+}
+
+.inputforero:hover{
+    border: 2px solid #235dff;
+}
+
+.miniletra{
+    font-size: smaller;
+}
+
+.prueba{
+background-color: rgb(167, 215, 255);
+}

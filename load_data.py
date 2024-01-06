@@ -11,6 +11,17 @@ cur = con.cursor()
 
 ### Create tables
 cur.execute("""
+	CREATE TABLE reserva(
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		user_id integer,
+		book_id integer,
+		fecha_inicio date,
+		fecha_fin date,
+		FOREIGN KEY(user_id) REFERENCES User(id),
+		FOREIGN KEY(book_id) REFERENCES Book(id)
+	)
+""")
+cur.execute("""
 	CREATE TABLE Author(
 		id integer primary key AUTOINCREMENT,
 		name varchar(40)
@@ -58,6 +69,46 @@ cur.execute("""
 	)
 """)
 
+
+cur.execute("""
+	CREATE TABLE Reviews (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		book_id INTEGER,
+		user_email TEXT,
+		date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		rating INTEGER,
+		review_text TEXT
+	)
+""")
+#foro
+cur.execute("""
+	CREATE TABLE Tema(
+		tema_id integer primary key AUTOINCREMENT,
+		titulo varchar(32),
+		creador_id integer,
+		FOREIGN KEY(creador_id) REFERENCES User(id)
+	)
+""")
+
+cur.execute("""
+	CREATE TABLE TemaMensaje(
+		mensaje_id integer primary key AUTOINCREMENT,
+		texto varchar(64),
+		autor_id integer,
+		idtema integer NOT NULL REFERENCES Tema(tema_id) ON DELETE CASCADE,
+		mensaje_resp integer,
+		FOREIGN KEY(mensaje_resp) REFERENCES TemaMensaje(mensaje_id)
+		FOREIGN KEY(autor_id) REFERENCES User(id)
+	)
+""")
+
+cur.execute("""
+	INSERT INTO Tema VALUES (1,"Primer Tema",1)
+""")
+
+cur.execute("""
+	INSERT INTO TemaMensaje VALUES (1,"Primer Tema Mensaje",1, 1, NULL)
+""")
 ### Insert users
 
 with open('usuarios.json', 'r') as f:
@@ -89,4 +140,12 @@ for author, title, cover, description in libros:
 	con.commit()
 
 
+### Insert reviews	
+with open('reviews.json', 'r') as f:
+	reviews = json.load(f)['reviews']
+
+for review in reviews:
+	cur.execute("""INSERT INTO Reviews (book_id, user_email, rating, review_text) VALUES (?, ?, ?, ?)""",
+				(review['bookId'], review['user_email'], review['rating'], review['review_text']))
+	con.commit()
 

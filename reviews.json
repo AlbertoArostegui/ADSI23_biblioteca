@@ -1,0 +1,64 @@
+{
+    "reviews": [
+        {
+            "bookId": 1,
+            "rating": 8,
+            "review_text": "A captivating journey into the world of subtle indulgences during sabbaticals. Mercedes Abad weaves a delightful narrative that keeps you engaged from start to finish.",
+            "user_email": "unai.bermudez@gmail.com"
+        },
+        {
+            "bookId": 2,
+            "rating": 7,
+            "review_text": "In 'Viaje con turbulencias,' Mercedes Abad takes us on a turbulent yet exciting journey. While the narrative is a bit erratic at times, the overall experience is enjoyable.",
+            "user_email": "unai.bermudez@gmail.com"
+        },
+        {
+            "bookId": 3,
+            "rating": 9,
+            "review_text": "Hector Abad Faciolince's 'El novelista en la torre de babel' is a masterpiece that explores the complexities of storytelling. A must-read for literature enthusiasts.",
+            "user_email": "unai.bermudez@gmail.com"
+        },
+        {
+            "bookId": 4,
+            "rating": 6,
+            "review_text": "While 'Manifiesto del surrealismo' by Fernando B. Abad Rodriguez offers intriguing perspectives, it may be challenging for some readers to fully embrace the surrealistic elements.",
+            "user_email": "unai.bermudez@gmail.com"
+        },
+        {
+            "bookId": 5,
+            "rating": 8,
+            "review_text": "Leopoldo Abadia's 'La hora de los sensatos' provides valuable insights into sensible decision-making. The author's wisdom shines through, making it a recommended read for those seeking practical advice.",
+            "user_email": "unai.bermudez@gmail.com"
+        },
+        {
+            "bookId": 6,
+            "rating": 9,
+            "review_text": "Edwin Abbott's 'Planilandia' is a mathematical marvel that unfolds in a fascinating world. The exploration of dimensions and shapes is mind-bending, making it a delightful read for lovers of mathematical fiction.",
+            "user_email": "unai.bermudez@gmail.com"
+        },
+        {
+            "bookId": 7,
+            "rating": 7,
+            "review_text": "Hayley Abbott's 'Forbiden boy' is a forbidden romance that keeps readers hooked with its passionate storyline. While the plot is somewhat predictable, the emotional depth adds to its appeal.",
+            "user_email": "unai.bermudez@gmail.com"
+        },
+        {
+            "bookId": 8,
+            "rating": 8,
+            "review_text": "Jeff Abbott's 'Panico' delivers a gripping tale of suspense and unexpected twists. The fast-paced narrative keeps you on the edge of your seat, making it a thrilling page-turner.",
+            "user_email": "unai.bermudez@gmail.com"
+        },
+        {
+            "bookId": 9,
+            "rating": 6,
+            "review_text": "Sergio Carlos Abdala's 'El vino trece' offers a unique perspective on [provide a brief description of the book]. The author's narrative style and storytelling captivate the reader, making it a compelling and enjoyable literary experience.",
+            "user_email": "unai.bermudez@gmail.com"
+        },
+        {
+            "bookId": 10,
+            "rating": 9,
+            "review_text": "Kader Abdolah's 'El reflejo de las palabras' is a poetic exploration of language and its profound impact on our perceptions. The author's lyrical style creates a mesmerizing reading experience.",
+            "user_email": "unai.bermudez@gmail.com"
+        }
+    ]
+}

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Library</title>
     <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="csspropio/style.css" rel="stylesheet">
     <link rel="stylesheet" href="css/font-awesome.min.css">
 
     <script src="js/bootstrap.bundle.js"></script>
@@ -24,6 +25,7 @@
           {% if request.user.admin == 1 %}
           <li class="nav-item"><a href="/admin" class="nav-link {% if request.path == '/admin' or request.path == '/gestor_libros' or request.path == '/gestor_usuarios' %}active{% endif %}">Panel Administración</a></li>
           {% endif %}
+          <li class="nav-item"><a href="/forum" class="nav-link {% if request.path == '/forum' %}active{% endif %}">Forum</a></li>
           <li class="nav-item"><a href="/perfil?username={{request.user}}" class="nav-link {% if request.path == '/perfil' %}active{% endif %}">{{request.user.username}}</a></li>
           <li class="nav-item"><a href="/logout?path={{request.path}}" class="nav-link"><i class="fa fa-sign-out fa-lg"></i></a></li>
           {% else %}

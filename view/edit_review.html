@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container p-5 my-5 border">
+    <h1>Edit Review of:</h1>
+
+    <hr class="hr" />
+
+    <div class="book-info">
+        {% if book.cover: %}
+        <img src="{{book.cover}}" class="rounded" style="max-width: 6rem; height: fit-content;">
+        {% endif %}
+        <div class="book-title-author">
+            <h2 class="book-title">{{ book.title }}</h2>
+            <h4 class="book-subtitle mb-2 text-muted">{{book.author }}</h4>
+        </div>
+        <style>
+            .book-title-author {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        </style>
+    </div>
+    <hr class="hr" />
+
+
+    <h4>Overall Rating</h4>
+    <div id="stars">
+        <span class="star">&#9734;</span>
+        <span class="star">&#9734;</span>
+        <span class="star">&#9734;</span>
+        <span class="star">&#9734;</span>
+        <span class="star">&#9734;</span>
+        <span class="star">&#9734;</span>
+        <span class="star">&#9734;</span>
+        <span class="star">&#9734;</span>
+        <span class="star">&#9734;</span>
+        <span class="star">&#9734;</span>
+    </div>
+    <h4 id="star-count">1 Star Selected</h4>
+
+    <hr class="hr" />
+
+    <h4>Add a written review</h4>
+    <div>
+        <textarea class="review-box" id="review-text" placeholder="Write a review">{{review[5]}}</textarea>
+    </div>
+
+    <div class="d-flex justify-content-between mt-2">
+        <button class="btn btn-primary" id="post-review">Post Review</button>
+        <a href="/delete-review?reviewId={{review[0]}}">
+            <button class="btn btn-danger ">Delete Review</button>
+        </a>
+    </div>
+
+
+
+    <script>
+        var stars = document.querySelectorAll('.star');
+        var selectedStars = 1; // Set the selectedStars variable to 1
+        var starCountElement = document.getElementById('star-count'); // Get the star count element
+
+        stars.forEach(function (star, index) {
+            star.addEventListener('click', function () {
+                selectedStars = index + 1;
+                stars.forEach(function (star, i) {
+                    star.innerHTML = i < selectedStars ? '&#9733;' : '&#9734;';
+                });
+                starCountElement.textContent = selectedStars + ' Star' + (selectedStars > 1 ? 's' : '') + ' Selected'; // Update the star count
+                
+            });
+        });
+
+        // Highlight the first star when the page loads
+        selectedStars  = "{{review[4]}}";
+        stars.forEach(function (star, index) {
+            star.innerHTML = index < selectedStars ? '&#9733;' : '&#9734;';
+        });
+        starCountElement.textContent = selectedStars + ' Star' + (selectedStars > 1 ? 's' : '') + ' Selected'; // Update the star count
+       
+
+
+
+        document.getElementById('post-review').addEventListener('click', function() {
+            var review_text = document.getElementById('review-text').value;
+            var rating = selectedStars;
+            var bookId = "{{ book.id }}" ;
+            var userEmail = '{{ review[2] }}';
+            var urlParams = new URLSearchParams(window.location.search);
+            var reviewID = urlParams.get('reviewId'); // Replace 'id' with the actual parameter name
+
+            
+            fetch('/update-review', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id: reviewID,
+                    book_id: bookId,
+                    user_email: userEmail,
+                    rating: rating,
+                    review_text: review_text,
+                    date_time: new Date().toISOString(),
+                }),
+            })
+
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                // No need to return response.url
+            })
+            .then(() => {
+                window.location.href = '/read-reviews?bookId=' + bookId ;
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        });
+        
+    </script>
+
+    <style>
+        .star {
+            font-size: 3em;
+            /* Adjust this value to change the size of the stars */
+            color: orange;
+            cursor: pointer;
+        }
+
+        .book-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .book-image {
+            width: 100px;
+            /* Adjust this value to change the size of the image */
+        }
+
+        .book-title {
+            margin: 0;
+        }
+
+        .review-box {
+            width: 100%;
+            /* Make the text box full width */
+            height: 200px;
+            /* Set a fixed height */
+            resize: vertical;
+            /* Allow the text box to be resized only vertically */
+        }
+
+    </style>
+
+</div>
+{% endblock %}
