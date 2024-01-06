@@ -45,7 +45,7 @@ def index():
 def admin():
 	return render_template('admin.html')
 
-@app.route('/gestor_libros')
+@app.route('/gestor_libros',methods=['GET', 'POST'])
 def gestor_libros():
 	titulo = request.values.get("titulo", "")
 	autor = request.values.get("autor", "")
@@ -55,7 +55,7 @@ def gestor_libros():
 		library.add_book(titulo, autor, portada, descripcion)
 	return render_template('gestor_libros.html')
 
-@app.route('/gestor_usuarios')
+@app.route('/gestor_usuarios', methods=['GET','POST'])
 def gestor_usuarios():
 	usuarios = library.get_all_users()
 	nombre = request.values.get("nombre", "")
@@ -141,7 +141,7 @@ def logout():
 		request.user = None
 	return resp
 
-@app.route('/eliminar_usuario')
+@app.route('/eliminar_usuario', methods=['GET', 'POST'])
 def eliminar_usuario():
 	library.delete_usuario(request.values.get("id", ""), request.values.get("nombre", ""), request.values.get("email", ""), request.values.get("contraseña",""), request.values.get("esadmin",""))
 	return redirect('/gestor_usuarios')
