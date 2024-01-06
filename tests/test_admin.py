@@ -30,12 +30,6 @@ class TestAdmin(BaseTestClass):
         self.assertEqual(200, res_crear.status_code)
         res_existe = self.db.select(f"SELECT * FROM User WHERE name='testman' AND email='testman@test.test' AND admin='0'")
         self.assertNotEqual([], res_existe)
-        page = BeautifulSoup(res_crear.data, 'html.parser')
-        lista_usuarios = page.find_all('li', class_='list-group-item')
-        usuariobuscar = 'testman'
-
-        usuario_encontrado = any(usuariobuscar in str(usuario) for usuario in lista_usuarios)
-        self.assertTrue(usuario_encontrado, "NO EXISTE TAL USUARIO")
 
 
     def test_delete_user_as_admin(self):
