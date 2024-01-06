@@ -29,7 +29,7 @@ class TestAdmin(BaseTestClass):
             },follow_redirects=True)
         self.assertEqual(200, res_crear.status_code)
         res_existe = self.db.select(f"SELECT * FROM User WHERE name='testman' AND email='testman@test.test' AND admin='0'")
-        self.assertNotEqual([], res_existe)
+        self.assertNotEqual([], res_existe)#a
 
 
     def test_delete_user_as_admin(self):
