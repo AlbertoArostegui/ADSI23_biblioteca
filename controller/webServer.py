@@ -22,7 +22,7 @@ def get_logged_user():
 		token = request.cookies.get('token')
 		time = request.cookies.get('time')
 		if token and time:
-			request.user = library.get_user_cookies(token, int(time))
+			request.user = library.get_user_cookies(token, float(time))
 			if request.user:
 				request.user.token = token
 
@@ -78,9 +78,6 @@ def catalogue():
 	user_reviews = []
 	if 'user' in dir(request) and request.user and request.user.token:
 		user_reviews = library.get_reviews_by_user(request.user.email)
-	for review in user_reviews:
-		print(review)
-		print("------------------")
 	return render_template('catalogue.html', books=books, title=title, author=author, current_page=page,
 						   total_pages=total_pages, max=max, min=min, user_reviews=user_reviews)
 
@@ -126,7 +123,10 @@ def login():
 		resp.set_cookie('token', session.hash)
 		resp.set_cookie('time', str(session.time))
 	else:
-		resp = make_response(render_template('login.html'))
+		if request.method == 'POST':
+			return redirect('/login')
+		else:
+			resp = render_template('login.html')
 	return resp
 
 
