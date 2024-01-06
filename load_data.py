@@ -47,6 +47,17 @@ cur.execute("""
 	)
 """)
 
+cur.execute("""
+	CREATE TABLE Amistad(
+		user1_id integer,
+		user2_id integer,
+		fecha_inicio DATE NOT NULL,
+		fecha_fin DATE,
+		FOREIGN KEY(user1) REFERENCES User(id),
+		FOREIGN KEY(user2) REFERENCES User(id)
+	)
+""")
+
 ### Insert users
 
 with open('usuarios.json', 'r') as f:

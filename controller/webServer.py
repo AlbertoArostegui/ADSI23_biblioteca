@@ -82,6 +82,10 @@ def login():
 		resp = make_response(render_template('login.html'))
 	return resp
 
+@app.route('/perfil')
+def perfil():
+	username = request.values.get("username", "")
+	return render_template('perfil.html')
 
 @app.route('/logout')
 def logout():
