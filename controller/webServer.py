@@ -129,10 +129,6 @@ def login():
 			resp = render_template('login.html')
 	return resp
 
-@app.route('/perfil')
-def perfil():
-	username = request.values.get("username", "")
-	return render_template('perfil.html')
 
 @app.route('/logout')
 def logout():
@@ -283,3 +279,19 @@ def update_review():
 	data = request.get_json()
 	library.edit_review(data['id'], data['rating'], data['review_text'])
 	return redirect(url_for('read_reviews', bookId=data['book_id']))
+
+@app.route('/perfil')
+def perfil():
+	username = request.args.get("username", "")
+	email = library.get_email_by_username(username)
+	reviews = library.get_reviews_by_user(email)
+	return render_template('perfil.html', perfil_username=username, reviews=reviews)
+
+@app.route('/solicitarAmistad', methods=['POST'])
+def solicitarAmistad():
+    iduser = request.form["iduser"]
+    idamigo = request.form["idamigo"]
+    library.solicitarAmistad(iduser, idamigo)
+    print(iduser,"   ", idamigo)
+
+    return redirect('/perfil')

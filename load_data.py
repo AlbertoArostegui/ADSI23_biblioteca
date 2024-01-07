@@ -64,8 +64,8 @@ cur.execute("""
 		user2_id integer,
 		fecha_inicio DATE NOT NULL,
 		fecha_fin DATE,
-		FOREIGN KEY(user1) REFERENCES User(id),
-		FOREIGN KEY(user2) REFERENCES User(id)
+		FOREIGN KEY(user1_id) REFERENCES User(id),
+		FOREIGN KEY(user2_id) REFERENCES User(id)
 	)
 """)
 

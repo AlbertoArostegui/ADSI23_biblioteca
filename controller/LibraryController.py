@@ -1,3 +1,4 @@
+import datetime
 from model import Connection, Book, User, Review
 from model.tools import hash_password
 
@@ -218,3 +219,27 @@ class LibraryController:
 		query = "SELECT * FROM Reviews WHERE user_email = ? ORDER BY date_time DESC"
 		reviews = db.select(query, (user_email,))
 		return reviews
+
+	def get_email_by_username(self, username):
+		query = "SELECT email FROM User WHERE name = ?"
+		email = db.select(query, (username,))
+		return email[0][0] if len(email) > 0 else None
+
+	def solicitarAmistad(self, iduser, iduser2):
+		try:
+			db.insert("""
+		             INSERT INTO Amistad (user1_id, user2_id, aceptada)
+		             VALUES ( ?, ?, ?)
+		        """, (iduser, iduser2, False))
+		except Exception as e:
+			print(f"Error añadiendo amistad: {e}")
+
+	def aceptarAmistad(self, iduser, iduser2):
+		try:
+			db.update("""
+			          UPDATE Amistad
+			          SET aceptada = ? AND fecha_inicio = ?
+					  WHERE (user1_id = ? AND user2_id = ?) OR (user1_id = ? AND user2_id = ?)
+			      """, (True, datetime.datetime.now(), iduser, iduser2))
+		except Exception as e:
+			print(f"Error aceptando amistad: {e}")
