@@ -45,7 +45,7 @@ def index():
 def admin():
 	return render_template('admin.html')
 
-@app.route('/gestor_libros')
+@app.route('/gestor_libros',methods=['GET', 'POST'])
 def gestor_libros():
 	titulo = request.values.get("titulo", "")
 	autor = request.values.get("autor", "")
@@ -55,7 +55,7 @@ def gestor_libros():
 		library.add_book(titulo, autor, portada, descripcion)
 	return render_template('gestor_libros.html')
 
-@app.route('/gestor_usuarios')
+@app.route('/gestor_usuarios', methods=['GET','POST'])
 def gestor_usuarios():
 	usuarios = library.get_all_users()
 	nombre = request.values.get("nombre", "")
@@ -76,15 +76,21 @@ def catalogue():
 
 	# Fetch the reviews of the current user
 	user_reviews = []
+	user_reservas = []
 	if 'user' in dir(request) and request.user and request.user.token:
 		user_reviews = library.get_reviews_by_user(request.user.email)
+		user_reservas = library.get_reservas_by_user(request.user.id)
 	return render_template('catalogue.html', books=books, title=title, author=author, current_page=page,
-						   total_pages=total_pages, max=max, min=min, user_reviews=user_reviews)
+						   total_pages=total_pages, max=max, min=min, user_reviews=user_reviews, user_reservas=user_reservas)
 
 
 @app.route('/reserva_exitosa')
 def reserva_exitosa():
     return render_template('reserva_exitosa.html')
+
+@app.route('/devolver_exitoso')
+def devolver_exitoso():
+    return render_template('devolver_exitoso.html')
 
 
 @app.route('/reserve-book', methods=['POST'])
@@ -109,6 +115,27 @@ def reserve_book():
         # Error en la reserva, manejar adecuadamente
         return "Error en la reserva", 400
 
+@app.route('/devolve-book', methods=['POST'])
+def devolve_book():
+    insertar = Connection()
+    user_id = request.form.get('user_id')
+    book_id = request.form.get('book_id')
+
+    fecha_inicio = datetime.now()
+    fecha_fin = fecha_inicio + timedelta(days=60)
+    fecha_ini_str = fecha_inicio.strftime('%Y-%m-%d')
+    fecha_fin_str = fecha_fin.strftime('%Y-%m-%d')
+
+    # Preparar los parámetros para la consulta SQL como una tupla
+    p = (user_id, book_id, fecha_ini_str, fecha_fin_str)
+
+    # Pasar la sentencia SQL con marcadores de estilo de SQLite y la tupla de parámetros al método insert
+    if insertar.delete("DELETE FROM reserva WHERE user_id = ? AND book_id = ?", (user_id, book_id)):
+        # Reserva exitosa, redirigir o mostrar un mensaje
+        return redirect('devolver_exitoso')
+    else:
+        # Error en la reserva, manejar adecuadamente
+        return "Usted no tiene este libro reservado", 400
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -141,7 +168,7 @@ def logout():
 		request.user = None
 	return resp
 
-@app.route('/eliminar_usuario')
+@app.route('/eliminar_usuario', methods=['GET', 'POST'])
 def eliminar_usuario():
 	library.delete_usuario(request.values.get("id", ""), request.values.get("nombre", ""), request.values.get("email", ""), request.values.get("contraseña",""), request.values.get("esadmin",""))
 	return redirect('/gestor_usuarios')

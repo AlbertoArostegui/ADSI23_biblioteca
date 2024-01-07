@@ -220,6 +220,11 @@ class LibraryController:
 		reviews = db.select(query, (user_email,))
 		return reviews
 
+	def get_reservas_by_user(self, user_id):
+		query = "SELECT * FROM reserva WHERE user_id = ?"
+		reservas = db.select(query, (user_id,))
+		return reservas
+
 	def get_email_by_username(self, username):
 		query = "SELECT email FROM User WHERE name = ?"
 		email = db.select(query, (username,))
