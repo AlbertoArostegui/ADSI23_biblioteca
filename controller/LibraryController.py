@@ -218,3 +218,8 @@ class LibraryController:
 		query = "SELECT * FROM Reviews WHERE user_email = ? ORDER BY date_time DESC"
 		reviews = db.select(query, (user_email,))
 		return reviews
+	
+	def get_reservas_by_user(self, user_id):
+		query = "SELECT * FROM reserva WHERE user_id = ?"
+		reservas = db.select(query, (user_id,))
+		return reservas

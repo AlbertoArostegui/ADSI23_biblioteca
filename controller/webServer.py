@@ -76,10 +76,12 @@ def catalogue():
 
 	# Fetch the reviews of the current user
 	user_reviews = []
+	user_reservas = []
 	if 'user' in dir(request) and request.user and request.user.token:
 		user_reviews = library.get_reviews_by_user(request.user.email)
+		user_reservas = library.get_reservas_by_user(request.user.id)
 	return render_template('catalogue.html', books=books, title=title, author=author, current_page=page,
-						   total_pages=total_pages, max=max, min=min, user_reviews=user_reviews)
+						   total_pages=total_pages, max=max, min=min, user_reviews=user_reviews, user_reservas=user_reservas)
 
 
 @app.route('/reserva_exitosa')
