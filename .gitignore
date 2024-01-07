@@ -162,3 +162,7 @@ cython_debug/
 
 #Database
 datos.db
+
+appmap.yml
+
+tmp/

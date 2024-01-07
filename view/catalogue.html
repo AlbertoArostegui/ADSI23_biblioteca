@@ -60,13 +60,37 @@
                             
                         </div>
                         
-                        <div class="d-flex justify-content-center mt-3">
+                        <div class="d-flex justify-content-between mt-3">
                             {% if 'user' in request.__dict__ and request.user and request.user.token %}
-                                <form action="/reserve-book" method="post" class="w-100">
-                                    <input type="hidden" name="book_id" value="{{ book.id }}">
-                                    <input type="hidden" name="user_id" value="{{ request.user.id }}">
-                                    <button type="submit" class="btn btn-success btn-lg btn-block w-100" style="font-size: larger;">Reserve this Book</button>
-                                </form>
+                                {% set ns = namespace(reserved=False) %}
+                                {% for reserva in user_reservas %}
+                                    {% if reserva[2] == book.id %}
+                                        {% set ns.reserved = True %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% if not ns.reserved %}
+                                    <form action="/reserve-book" method="post" class="w-100 m-1">
+                                        <input type="hidden" name="book_id" value="{{ book.id }}">
+                                        <input type="hidden" name="user_id" value="{{ request.user.id }}">
+                                        <button type="submit" class="btn btn-success btn-lg btn-block w-100" style="font-size: larger;">Reserve this Book</button>
+                                    </form>
+                                {% else %}
+                                    {% set ns = namespace(found_reservation=None) %}
+                                    {% for reserva in user_reservas %}
+                                        {% if reserva[1] == request.user.id %}
+                                            {% set ns.found_reservation = reserva %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    <div class="d-flex flex-column w-100">
+                                        <p class="reserve-expiration w-100 m-1">Reservation expires on:  {{ns.found_reservation[4]}}</p>
+                                        <form action="/devolve-book" method="post" class="w-100 m-1">
+                                            <input type="hidden" name="book_id" value="{{ book.id }}">
+                                            <input type="hidden" name="user_id" value="{{ request.user.id }}">
+                                            <button type="submit" class="btn btn-warning btn-lg btn-block w-100" style="font-size: larger;">Return this Book</button>
+                                        </form>
+                                    </div>
+                                {% endif %}
+                                
                             {% endif %}
                         </div>
                         
