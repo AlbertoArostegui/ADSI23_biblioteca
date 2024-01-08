@@ -38,7 +38,7 @@ class TestAdmin(BaseTestClass):
         self.assertTrue(usuario_encontrado, "NO EXISTE TAL USUARIO")
 
 
-    def test_delete_user_as_admin(self):
+    def test_borrar_usuario(self):
         res_login = self.client.post('/login', data={
             'email': 'admin@admin.admin',
             'password': 'admin'}, follow_redirects=True)
