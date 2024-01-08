@@ -1,3 +1,4 @@
+import datetime
 from model import Connection, Book, User, Review
 from model.tools import hash_password
 
@@ -218,8 +219,74 @@ class LibraryController:
 		query = "SELECT * FROM Reviews WHERE user_email = ? ORDER BY date_time DESC"
 		reviews = db.select(query, (user_email,))
 		return reviews
-	
+
 	def get_reservas_by_user(self, user_id):
 		query = "SELECT * FROM reserva WHERE user_id = ?"
 		reservas = db.select(query, (user_id,))
 		return reservas
+
+	def get_email_by_username(self, username):
+		query = "SELECT email FROM User WHERE name = ?"
+		email = db.select(query, (username,))
+		return email[0][0] if len(email) > 0 else None
+	
+	def get_username_by_email(self, email):
+		query = "SELECT name FROM User WHERE email = ?"
+		username = db.select(query, (email,))
+		return username[0][0] if len(username) > 0 else None
+	
+	def get_id_by_email(self, email):
+		query = "SELECT id FROM User WHERE email = ?"
+		id = db.select(query, (email,))
+		return id[0][0] if len(id) > 0 else None
+
+	def solicitarAmistad(self, solicitante, solicitado):
+		try:
+			db.insert("""
+		             INSERT INTO Amistad (user1_id, user2_id, aceptada, fecha_inicio)
+		             VALUES ( ?, ?, ?, ?)
+		        """, (solicitado, solicitante, False, datetime.datetime.now(),))
+		except Exception as e:
+			print(f"Error añadiendo amistad: {e}")
+
+	def comprobarExisteAmistad(self, iduser, iduser2):
+		query = """
+			SELECT * FROM Amistad WHERE (user1_id = ? AND user2_id = ?) OR (user1_id = ? AND user2_id = ?)
+		"""
+		amistad = db.select(query, (iduser, iduser2, iduser2, iduser))
+		return True if len(amistad) > 0 else False
+
+	def aceptarAmistad(self, iduser, iduser2):
+		try:
+			db.update("""
+			          UPDATE Amistad
+			          SET aceptada = TRUE
+					  WHERE (user1_id = ? AND user2_id = ?) 
+			      """, (iduser, iduser2))
+		except Exception as e:
+			print(f"Error aceptando amistad: {e}")
+
+	def rechazarAmistad(self, solicitado, solicitante):
+		try:
+			db.delete("""
+			          DELETE FROM Amistad
+					  WHERE (user1_id = ? AND user2_id = ?)
+			      """, (solicitado, solicitante))
+		except Exception as e:
+			print(f"Error rechazando amistad: {e}")
+	
+	def get_solicitudes(self, iduser):
+		query = """
+            SELECT u.name, a.fecha_inicio FROM Amistad as a INNER JOIN User as u ON a.user2_id = u.id
+            WHERE a.user1_id = ? AND a.aceptada = FALSE
+        """
+		solicitudes = db.select(query, (iduser,))
+		return solicitudes
+	
+	def get_amigos(self, iduser):
+		query = """
+			SELECT u2.name, a.fecha_inicio FROM Amistad as a INNER JOIN User as u ON a.user1_id = u.id INNER JOIN User as u2 ON a.user2_id = u2.id
+			WHERE (a.user1_id = ? OR a.user2_id = ?) AND a.aceptada = TRUE
+			"""
+		amigos = db.select(query, (iduser, iduser))
+		return amigos

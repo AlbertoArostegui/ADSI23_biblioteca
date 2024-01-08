@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="col-md-12 d-flex justify-content-center">
+        <table class="table">
+            <thead>
+                <tr>
+                <th>Nombre</th>
+                <th>Realizada</th>
+                <th>Acciones</th>
+                </tr>
+            </thead>  
+            <tbody>
+                {% for solicitud in solicitudes %}
+                    <tr>
+                        <td>{{solicitud[0]}}</td>
+                        <td>{{solicitud[1]|formatdatetimef}}</td>
+                        <td>
+                            <a href="/perfil?username={{solicitud[0]}}">
+                                <button type="button" class="btn btn-primary btn-sm">Ver perfil</button>
+                            </a>
+                            <form action="/aceptarAmistad" method="POST">
+                                <input name="idamigo" type="hidden" value="{{solicitud[0]}}">
+                                <input name="iduser" type="hidden" value="{{request.user.email}}">
+                                <input type="submit" class="btn btn-success btn-sm" value="Aceptar">
+                            </form>
+                            <form action="/rechazarAmistad" method="POST">
+                                <input name="idamigo" type="hidden" value="{{solicitud[0]}}">
+                                <input name="iduser" type="hidden" value="{{request.user.email}}">
+                                <input type="submit" class="btn ml-4 btn-danger btn-sm" value="Rechazar">
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
