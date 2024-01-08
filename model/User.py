@@ -18,6 +18,7 @@ class User:
 		self.username = username
 		self.email = email
 		self.admin = admin
+		self.friends = []
 
 	def __str__(self):
 		return f"{self.username} ({self.email})"
@@ -40,3 +41,6 @@ class User:
 
 	def delete_session(self, session_hash):
 		db.delete("DELETE FROM Session WHERE session_hash = ? AND user_id = ?", (session_hash, self.id))
+
+	def add_friend(self, requesting_user_id):
+		db.insert("INSERT INTO Amistad VALUES (?, ?, ?, ?)", (self.id, requesting_user_id, datetime.datetime.now(), None))

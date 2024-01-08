@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="col-md-12 d-flex justify-content-center">
+        <table class="table">
+            <thead>
+                <tr>
+                <th>Nombre</th>
+                <th>Amigos desde</th>
+                <th>Acciones</th>
+                </tr>
+            </thead>  
+            <tbody>
+                {% for amigo in amigos %}
+                    <tr>
+                        <td>{{amigo[0]}}</td>
+                        <td>{{amigo[1]|formatdatetimef}}</td>
+                        <td>
+                            <a href="/perfil?username={{amigo[0]}}">
+                                <button type="button" class="btn btn-primary btn-sm">Ver perfil</button>
+                            </a>
+                            <form action="/rechazarAmistad" method="POST">
+                                <input name="idamigo" type="hidden" value="{{amigo[0]}}">
+                                <input name="iduser" type="hidden" value="{{request.user.email}}">
+                                <input type="submit" class="btn ml-4 btn-danger btn-sm" value="Eliminar amistad">
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

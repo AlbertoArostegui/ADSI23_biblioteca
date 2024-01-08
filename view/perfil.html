@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container d-flex flex-row">
+    <div class="row">
+        <div class="container">
+            <div class="col-md-12 d-flex justify-content-center">
+                <img src="https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png" alt="No hay imagen de icono de usuario">
+            </div>
+            <div class="col-md-12 d-flex justify-content-center">
+                <h1>{{perfil_username}}</h1>
+            </div>
+            <div class="col-md-12 d-flex justify-content-center">
+            {% if request.user.email != user_email%}
+            <div class="col-md-12 d-flex justify-content-center">
+            <form action="/solicitarAmistad" method="POST">
+                <input name="idamigo" type="hidden" value="{{user_email}}">
+                <input name="iduser" type="hidden" value="{{request.user.email}}">
+                <input type="submit" class="btn btn-primary btn-sm" value="Solicitar amistad">
+            </form>
+            {% else %}
+            <div class="col-md-4 d-flex justify-content-center">
+            <form action="/misSolicitudes">
+                <input name="user_email" type="hidden" value="{{request.user.email}}">
+                <input type="submit" class="btn btn-primary btn-sm" value="Mis solicitudes">
+            </form>
+            <form action="/misAmigos">
+                <input name="user_email" type="hidden" value="{{request.user.email}}">
+                <input type="submit" class="btn ml-5 btn-primary btn-sm" value="Mis amigos">
+            </form>
+            {% endif %}
+        </div>
+        </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            
+            {% if reviews|length == 0 %}
+                <h2>Este usuario no ha escrito ninguna reseña todavia</h2>
+            {% else %}
+                <h2>Últimas reseñas de {{perfil_username}}</h2>
+            {% endif %}
+            
+            {% set cont = 1 %}
+            {% for review in reviews %}
+                {% if cont < 5 %}
+                    <div class="col-md-12"> <div class="card mb-1">
+                            <div class="card-body d-flex flex-column">
+                                <p class="text-muted">Written on: {{review[3]|formatdatetime}}</p>
+                                <p class="card-rating">
+                                    Rating: 
+                                    {% for i in range(review[4]) %}
+                                        <span class="star">&#9733;</span>
+                                    {% endfor %}
+                                    {% for i in range(10 - review[4]) %}
+                                        <span class="star">&#9734;</span>
+                                    {% endfor %}
+                                    {{review[4]}}/10
+                                </p>
+                                <p class="card-text">{{review[5]}}</p>
+                                <div class="d-flex justify-content-between mt-1">
+                                    {% if 'user' in request.__dict__ and request.user and request.user.token: %}
+                                        {% if request.user.admin == 1  or request.user.email == review[2]%} <!-- si eres admin o el autor-->
+                                            <a href="/delete-review?reviewId={{review[0]}}">
+                                                <button class="btn btn-danger ">Delete Review</button>
+                                            </a>
+                                        {% endif %}
+                                        {% if request.user.email == review[2] %} <!-- si eres el autor -->
+                                            <a href="/edit-review?reviewId={{review[0]}}">
+                                                <button class="btn btn-info ">Edit My Review</button>
+                                            </a>
+                                        {% endif %}
+                                    {% endif %}
+                            
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                {% endif %}
+                {% set cont = cont + 1 %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

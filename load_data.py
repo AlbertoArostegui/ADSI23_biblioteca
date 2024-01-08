@@ -58,6 +58,18 @@ cur.execute("""
 	)
 """)
 
+cur.execute("""
+	CREATE TABLE Amistad(
+		user1_id integer,
+		user2_id integer,
+		fecha_inicio DATE NOT NULL,
+		fecha_fin DATE,
+		aceptada boolean,
+		FOREIGN KEY(user1_id) REFERENCES User(id),
+		FOREIGN KEY(user2_id) REFERENCES User(id)
+	)
+""")
+
 
 cur.execute("""
 	CREATE TABLE Reviews (
