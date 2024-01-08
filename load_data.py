@@ -64,6 +64,7 @@ cur.execute("""
 		user2_id integer,
 		fecha_inicio DATE NOT NULL,
 		fecha_fin DATE,
+		aceptada boolean,
 		FOREIGN KEY(user1_id) REFERENCES User(id),
 		FOREIGN KEY(user2_id) REFERENCES User(id)
 	)

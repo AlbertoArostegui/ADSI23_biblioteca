@@ -310,15 +310,72 @@ def update_review():
 @app.route('/perfil')
 def perfil():
 	username = request.args.get("username", "")
-	email = library.get_email_by_username(username)
-	reviews = library.get_reviews_by_user(email)
-	return render_template('perfil.html', perfil_username=username, reviews=reviews)
+	if "@" in username:
+		user_email = username
+		username = library.get_username_by_email(username)
+	else:
+		user_email = library.get_email_by_username(username)
+	reviews = library.get_reviews_by_user(user_email)
+	return render_template('perfil.html', perfil_username=username, reviews=reviews, user_email=user_email)
 
 @app.route('/solicitarAmistad', methods=['POST'])
 def solicitarAmistad():
-    iduser = request.form["iduser"]
-    idamigo = request.form["idamigo"]
-    library.solicitarAmistad(iduser, idamigo)
-    print(iduser,"   ", idamigo)
+    email_user = request.form["iduser"]
+    email_amigo = request.form["idamigo"]
 
-    return redirect('/perfil')
+    iduser = library.get_id_by_email(email_user)
+    idamigo = library.get_id_by_email(email_amigo)	
+    if not library.comprobarExisteAmistad(iduser, idamigo):
+        library.solicitarAmistad(iduser, idamigo)
+
+    return redirect('/perfil?username='+email_amigo)
+
+@app.route('/aceptarAmistad', methods=['POST'])
+def aceptarAmistad():
+    email_user = request.form["iduser"]
+    amigo_username = request.form["idamigo"]
+
+    email_amigo = library.get_email_by_username(amigo_username)
+
+    iduser = library.get_id_by_email(email_user)
+    idamigo = library.get_id_by_email(email_amigo)	
+
+    library.aceptarAmistad(iduser, idamigo)
+
+    return redirect('/perfil?username='+email_user)
+
+@app.route('/rechazarAmistad', methods=['POST'])
+def rechazarAmistad():
+	email_user = request.form["iduser"]
+	amigo_username = request.form["idamigo"]
+
+	email_amigo = library.get_email_by_username(amigo_username)
+
+	iduser = library.get_id_by_email(email_user)
+	idamigo = library.get_id_by_email(email_amigo)	
+
+	library.rechazarAmistad(iduser, idamigo)
+
+	return redirect('/perfil?username='+email_user)
+
+@app.route('/misSolicitudes')
+def misSolicitudes():
+    user_email = request.args.get("user_email", "")
+    id = library.get_id_by_email(user_email)
+    solicitudes = library.get_solicitudes(id)
+    return render_template('mis_solicitudes.html', solicitudes=solicitudes, user_email=user_email)
+
+@app.route('/misAmigos')
+def misAmigos():
+	user_email = request.args.get("user_email", "")
+	id = library.get_id_by_email(user_email)
+	amigos = library.get_amigos(id)
+	return render_template('mis_amigos.html', amigos=amigos, user_email=user_email)
+
+@app.template_filter('formatdatetimef')
+def format_datetime(value):
+	if value is None:
+		return ""
+
+	datetime_object = datetime.strptime(value, '%Y-%m-%d %H:%M:%S.%f')
+	return datetime_object.strftime('%B %d %Y, %H:%M:%S')
